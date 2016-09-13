@@ -1,0 +1,26 @@
+Java File Auto-grading application
+Author: Professor Steven Moon
+Institution: Frostburg State University
+Initial Commit: 2016.09.13
+
+This project is under development and is currently being used in a CS1 classroom
+In an attempt to increase my own efficiency, and decrease the amount of grading
+I have to do, I aimed to create an application that takes student's .java files
+submitted to blackboard, then produce grade results in the form of text files
+for the individual student, as well as a CSV file for myself. 
+
+Up to this point, I have not been using version control, but this project is
+beginning to grow fairly large, so I decided it was time to practice what I 
+preach and start using git.
+
+This project was done in NetBeans IDE and uses Maven for build and dependency
+management. At the moment, mass grading submissions from blackboard is done
+via a batch file on a Windows machine that handles extraction from zip files.
+
+I am aware of the disorganized nature of the code. This will be fixed in 
+future iterations of the project.
+
+The license header can be found in the project files. This project is 
+distributed under the GNU GPL v2.
+https://www.gnu.org/licenses/gpl-2.0.html
+This project uses the javaparser found on: javaparser.org
