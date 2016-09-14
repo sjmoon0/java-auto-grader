@@ -251,7 +251,6 @@ public class Assignment
 		    PrintStream old = System.out;
 			Class<?> getclass = testObj.getClass();
 			Method check = getclass.getMethod(methodName,params);
-
 			if(check!=null){
 		    	System.setOut(ps);
 				check.invoke(testObj,(Object[])params);
@@ -290,15 +289,44 @@ public class Assignment
 		}
 	}
         
-        /*
-        public Requirement assertCodeInMethodBodyRegex(String methodName, String targetRegex, int pointsPossible){
-            //Use JavaParser to check for presence of:
-                //Local Variable names, types
-                //loop used
-                //conditional used
-                //print vs println
+        /**
+         * Takes an Array of strings and checks to see if all values can be found
+         * in the corresponding code String. 
+         * @param codeToCheck Section of code to check. Could be method, field, comments
+         * @param targetRegexes Requirements for the code to match
+         * @return true if all code is found in the codeToCheck
+         */
+        public boolean assertCodeExistsRegex(String codeToCheck, String targetRegex){
+            try{
+                Pattern p = Pattern.compile(targetRegex);
+                Matcher m = p.matcher(codeToCheck);
+                return m.find();
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
         }
         
+        public ArrayList<Requirement> checkFieldsExist(ParsedClass parsedClass,String[] fieldRegexes,int pointPerField){
+            ArrayList<String> fields = parsedClass.getFields();
+            ArrayList<Requirement> reqs = new ArrayList();
+            for(int i=0;i<fields.size();++i){
+                for(int j=0; j<fieldRegexes.length;++j){
+                    if(assertCodeExistsRegex(fields.get(i),fieldRegexes[j])){
+                        reqs.add(new Requirement("Class Variable: "+fields.get(i)+" exists?",pointPerField,pointPerField,"Correct!"));
+                    }
+                }
+            }
+            if(reqs.size()<fieldRegexes.length){
+                int numMissing = fieldRegexes.length-reqs.size();
+                for(int i=0; i<numMissing;++i){
+                    reqs.add(new Requirement("Class Variable",pointPerField,0,"Missing class variable or incorrect name. Check class variable declarations and Lab document."));
+                }
+            }
+            return reqs;
+        }
+        
+        /*
         public Requirement assertCodeInMethodHeaderRegex(String methodName, String targetRegex, int pointsPossible){
             //Use JavaParser to check a method's:
                 //parameter list, names

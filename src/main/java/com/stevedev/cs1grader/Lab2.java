@@ -34,7 +34,9 @@ public class Lab2 extends Assignment
         requirements = checkInitialConditions(MAIN_CLASS);
         if(requirements.get(0).getReceived()>0 &&requirements.get(1).getReceived()>0)
         {
-                //requirements.add(lab.);
+            for(Requirement r: lab.checkFields()){
+                requirements.add(r);
+            }
         }
         grade(requirements,args.length>0?Boolean.parseBoolean(args[0]):false);
 
@@ -44,5 +46,12 @@ public class Lab2 extends Assignment
     {
             super("Lab",2);
             testObj = getInstance(MAIN_CLASS,null,null);
+    }
+    
+    public ArrayList<Requirement> checkFields(){
+        String EMPLOYEE_UN = "^public( )+static( )+final( )+String( )+EMPLOYEE_UN( )*=( )*\""+getUsername()+"\"( )*;$";
+        String BANANA_COST = "^public( )+static( )+final( )+double( )+BANANA_COST( )*=( )*((\\d)+|(\\d)+\\.(\\d)*)( )*;$";
+        String[] requiredFields = {EMPLOYEE_UN,BANANA_COST};
+        return checkFieldsExist(parsedClass,requiredFields,3);
     }
 }

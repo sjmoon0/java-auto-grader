@@ -49,7 +49,7 @@ public class JavaFileParser {
                 if(member instanceof MethodDeclaration){
                     MethodDeclaration m = (MethodDeclaration)member;
                     String comments = (m.getJavaDoc()==null ? "":m.getJavaDoc().toString());
-                    pm.add(new ParsedMethod(m.getName(),comments,m.getDeclarationAsString(),m.getBody().toStringWithoutComments()));
+                    pm.add(new ParsedMethod(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),m.getBody().toStringWithoutComments().trim()));
                 }
             }
         }
@@ -64,7 +64,7 @@ public class JavaFileParser {
             for(BodyDeclaration member:members){
                 if(member instanceof FieldDeclaration){
                     FieldDeclaration f = (FieldDeclaration)member;
-                    fields.add(f.toStringWithoutComments());
+                    fields.add(f.toStringWithoutComments().trim());
                 }
             }
         }
@@ -77,7 +77,7 @@ public class JavaFileParser {
             if(type instanceof ClassOrInterfaceDeclaration){
                 ClassOrInterfaceDeclaration c = (ClassOrInterfaceDeclaration)type;
                 String comments = (c.getJavaDoc()==null ? "":c.getJavaDoc().toString());
-                return new ParsedClass(c.getName(),comments,fields,methods);
+                return new ParsedClass(c.getName().trim(),comments.trim(),fields,methods);
             }
         }
         return null;
