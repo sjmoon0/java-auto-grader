@@ -15,7 +15,7 @@ public class BananaStand{
 	* @param args THE arguments passed in during execution
 	*/
 	public static void main(String[] args){
-		greetCustomer();
+		greetCustomer ();
 		checkoutCustomer();
 	}
 	

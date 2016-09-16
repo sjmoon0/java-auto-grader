@@ -26,7 +26,6 @@ public class JavaFileParser {
     public static ParsedClass parse(String f){
         String fileName = f;
         try{
-            printDirInfo();
             FileInputStream in = new FileInputStream(fileName+".java");
             CompilationUnit cu;
             cu = JavaParser.parse(in);
@@ -45,7 +44,6 @@ public class JavaFileParser {
         for(TypeDeclaration type:types){
             List<BodyDeclaration> members = type.getMembers();
             for(BodyDeclaration member:members){
-                //System.out.println("~>~>~>~>~>~>~>~>~>~"+member.getClass().getName()+"~>~>~>~>~>~>~>~>~>~"+"\n"+member.toString());
                 if(member instanceof MethodDeclaration){
                     MethodDeclaration m = (MethodDeclaration)member;
                     String comments = (m.getJavaDoc()==null ? "":m.getJavaDoc().toString());

@@ -53,7 +53,6 @@ public class Assignment
 		this.num=num;
 		this.un=getUsername();
 		initializeStudents();
-                //System.out.println("COnstructor"+this.getClass().getCanonicalName());
 	}
 	
 	/**
@@ -178,7 +177,6 @@ public class Assignment
 		URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
 		String[] dirnames = location.getFile().split("/");
 		String currdir = dirnames[dirnames.length-2];
-		//System.out.println(currdir);
                 return currdir.split("_")[1].trim();
 	}
 
@@ -193,46 +191,44 @@ public class Assignment
 	*/
 	public Requirement assertSystemOutput(Object testObj, String methodName,Class[] params,String targetOutput, int pointsPossible){
 		try{
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(baos);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    PrintStream ps = new PrintStream(baos);
 		    PrintStream old = System.out;
-			Class<?> getclass = testObj.getClass();
-			Method check = getclass.getMethod(methodName,params);
-
-			if(check!=null){
-		    	System.setOut(ps);
-				check.invoke(testObj,(Object[])params);
-				
-				if(baos.toString().length()>0 ){
-					if(baos.toString().trim().equals(targetOutput.trim())){
-						System.out.flush();
-			    		System.setOut(old);
-						System.out.print(baos.toString());
-						return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible,"Correct!");
-					}
-					else{
-						System.out.flush();
-			    		System.setOut(old);
-						System.out.print(baos.toString());
-						return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible/2,"Incorrect Output. Expecting :\""+
-							targetOutput+"\", Found:\""+baos.toString().trim()+"\". Check spelling and capitalization");
-					}
-				}
-				System.out.flush();
-	    		System.setOut(old);
-				System.out.print(baos.toString());
-	    		return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
-			}
-			else{
-				System.out.flush();
-	    		System.setOut(old);
-				System.out.print(baos.toString());
-				return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
-			}
-		}catch(Exception e){
-			return new Requirement("Output?:"+methodName,pointsPossible,0,"Could not find method: "+
-				methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
-		}
+                    Class<?> getclass = testObj.getClass();
+                    Method check = getclass.getMethod(methodName,params);
+                    if(check!=null){
+                        System.setOut(ps);
+                        check.invoke(testObj,(Object[])params);
+                        if(baos.toString().length()>0 ){
+                                if(baos.toString().trim().equals(targetOutput.trim())){
+                                    System.out.flush();
+                                    System.setOut(old);
+                                    System.out.print(baos.toString());
+                                    return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                                }
+                                else{
+                                    System.out.flush();
+                                    System.setOut(old);
+                                    System.out.print(baos.toString());
+                                    return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible/2,"Incorrect Output. Expecting :\""+
+                                                targetOutput+"\", Found:\""+baos.toString().trim()+"\". Check spelling and capitalization");
+                                }
+                        }
+                        System.out.flush();
+                        System.setOut(old);
+                        System.out.print(baos.toString());
+                        return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
+                    }
+                    else{
+                        System.out.flush();
+                        System.setOut(old);
+                        System.out.print(baos.toString());
+                        return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
+                    }
+            }catch(Exception e){
+                return new Requirement("Output?:"+methodName,pointsPossible,0,"Could not find method: "+
+                            methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
+            }
 	}
 
 	/**
@@ -248,11 +244,11 @@ public class Assignment
 		try{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			PrintStream ps = new PrintStream(baos);
-		    PrintStream old = System.out;
+                        PrintStream old = System.out;
 			Class<?> getclass = testObj.getClass();
 			Method check = getclass.getMethod(methodName,params);
 			if(check!=null){
-		    	System.setOut(ps);
+                                System.setOut(ps);
 				check.invoke(testObj,(Object[])params);
 				if(baos.toString().length()>0 ){
 					Pattern p = Pattern.compile(targetRegex);
@@ -290,15 +286,15 @@ public class Assignment
 	}
         
         /**
-         * Takes an Array of strings and checks to see if all values can be found
+         * Takes a string and checks to see if the target regex can be found
          * in the corresponding code String. 
          * @param codeToCheck Section of code to check. Could be method, field, comments
-         * @param targetRegexes Requirements for the code to match
+         * @param targetRegex Requirement for the code to match
          * @return true if all code is found in the codeToCheck
          */
         public boolean assertCodeExistsRegex(String codeToCheck, String targetRegex){
             try{
-                Pattern p = Pattern.compile(targetRegex);
+                Pattern p = Pattern.compile(targetRegex,Pattern.DOTALL);
                 Matcher m = p.matcher(codeToCheck);
                 return m.find();
             }catch(Exception e){
@@ -326,20 +322,44 @@ public class Assignment
             return reqs;
         }
         
-        /*
-        public Requirement assertCodeInMethodHeaderRegex(String methodName, String targetRegex, int pointsPossible){
-            //Use JavaParser to check a method's:
-                //parameter list, names
-                //return type
-                //access modifier
+        public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
+            ArrayList<ParsedMethod> methods = parsedClass.getMethods();
+            ArrayList<Requirement> reqs = new ArrayList();
+            for(int i=0;i<methods.size();++i){
+                if(methodName.equals(methods.get(i).getName())){
+                    System.out.println(methods.get(i).getComments());
+                    System.out.println("::::::::::::::::::::::::::");
+                    if(assertCodeExistsRegex(methods.get(i).getComments(),commentRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,pointsPerReq,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,0,"Incorrect"));
+                    }
+                    System.out.println(methods.get(i).getHeader());
+                    System.out.println("::::::::::::::::::::::::::");
+                    if(assertCodeExistsRegex(methods.get(i).getHeader(),headerRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,pointsPerReq,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,0,"Incorrect"));
+                    }
+                    System.out.println(methods.get(i).getBody());
+                    System.out.println("::::::::::::::::::::::::::");
+                    if(assertCodeExistsRegex(methods.get(i).getBody(),bodyRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,pointsPerReq*2,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,0,"Incorrect"));
+                    }
+                    break;
+                }
+                else{
+                    if(i==methods.size()){
+                        reqs.add(new Requirement("Method "+methodName+"?",pointsPerReq*4,0,"Not found"));
+                        break;
+                    }
+                    continue;
+                }
+            }
+            return reqs;
         }
-        
-        public Requirement assertMethodIO(Object testObj, String methodName,Class[] params, int pointsPossible){
-            //Use testObj to 
-                //verify method output datatype is correct type
-                //verify method output is correct
-        }
-        */
 
 	/**
 	* "Grades" a list of requirments by writing them to the student grade text file.
