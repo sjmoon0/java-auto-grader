@@ -1,7 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright (C) 2016 steve
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package com.stevedev.cs1grader;
 
@@ -134,6 +146,13 @@ public class Assignment
 		return new Requirement("Directory Name?",IC_POINTS,0,"Incorrect directory name. Check project specifications for naming convention.");
 	}
         
+        /**
+         * Finds the class file given the name in the working directory and creates an instance of it.
+         * @param className Class name
+         * @param argTypes Constructor Argument types
+         * @param argValues Constructor Argument values
+         * @return 
+         */
         public static Object getInstance(String className, Class<?>[] argTypes, Object[] argValues){
             //System.out.println("getInstance:");printDirInfo();
             try{
@@ -149,7 +168,10 @@ public class Assignment
                 return null;
             }
         }
-
+        
+        /**
+         * Prints the current working directory and the files/directories inside
+         */
         public static void printDirInfo(){
             System.out.println("Directory:"+System.getProperty("user.dir"));
             File folder = new File(System.getProperty("user.dir"));
@@ -303,6 +325,14 @@ public class Assignment
             }
         }
         
+        /**
+         * Checks the ParsedClass for the existence of a field, returns 
+         * a gradable requirement depending on regex matching
+         * @param parsedClass The ParsedClass object to be searched
+         * @param fieldRegexes An Array of Strings that represent patterns to be tested
+         * @param pointPerField The bumber of points for each field in the fieldRegexes
+         * @return Gradable requirements
+         */
         public ArrayList<Requirement> checkFieldsExist(ParsedClass parsedClass,String[] fieldRegexes,int pointPerField){
             ArrayList<String> fields = parsedClass.getFields();
             ArrayList<Requirement> reqs = new ArrayList();
@@ -322,6 +352,17 @@ public class Assignment
             return reqs;
         }
         
+        /**
+         * Checks the ParsedClass for the existence of a method, returns 
+         * a gradable requirement depending on regex matching
+         * @param parsedClass ParsedClass object being checked
+         * @param methodName Name of the method to be checked
+         * @param commentRegex Comment regex pattern
+         * @param headerRegex Header regex pattern
+         * @param bodyRegex Body regex pattern
+         * @param pointsPerReq Points per requirement. Methods have requirements about method comment,header, and body
+         * @return 
+         */
         public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
             ArrayList<ParsedMethod> methods = parsedClass.getMethods();
             ArrayList<Requirement> reqs = new ArrayList();
