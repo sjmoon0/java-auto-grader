@@ -46,10 +46,10 @@ public class Lab1 extends Assignment
     }
 
     public Requirement checkPrintAge(){
-            return assertSystemOutputRegex(testObj,"printAge",null,"^\\d\\d$",10);
+            return assertSystemOutputRegex(testObj,"printAge",null, null,"^\\d\\d$",10);
     }
 
     public Requirement checkPrintFavQuotes(){
-            return assertSystemOutputRegex(testObj,"printFavQuotes",null,"^(\".+\"\t:\t.+\\R){2,}$",10);
+            return assertSystemOutputRegex(testObj,"printFavQuotes",null,null,"^(\".+\"\t:\t.+\\R){2,}$",10);
     }
 }

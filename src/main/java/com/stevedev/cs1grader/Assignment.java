@@ -41,7 +41,7 @@ public class Assignment
 	private static FileWriter studentGradeFile;
 	private static FileWriter masterGradeFile;
 	private static HashSet<String> STUDENTS;
-	private static final int IC_POINTS=8;//Points for initial conditions. Decrease for subsequent labs
+	private static final int IC_POINTS=3;//Points for initial conditions. Decrease for subsequent labs
 
 	/**
 	* Assignment constructor
@@ -240,16 +240,16 @@ public class Assignment
 	* @param pointsPossible Points this method is worth
 	* @return A single requirement to be graded. 0% if No output or method doesn't exist. 50% if Output is incorrect but present
 	*/
-	public Requirement assertSystemOutputRegex(Object testObj, String methodName,Class[] params,String targetRegex, int pointsPossible){
+	public Requirement assertSystemOutputRegex(Object testObj, String methodName,Class[] paramTypes,Object[] paramValues, String targetRegex, int pointsPossible){
 		try{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			PrintStream ps = new PrintStream(baos);
                         PrintStream old = System.out;
 			Class<?> getclass = testObj.getClass();
-			Method check = getclass.getMethod(methodName,params);
+			Method check = getclass.getMethod(methodName,paramTypes);
 			if(check!=null){
                                 System.setOut(ps);
-				check.invoke(testObj,(Object[])params);
+				check.invoke(testObj,(Object[])paramValues);
 				if(baos.toString().length()>0 ){
 					Pattern p = Pattern.compile(targetRegex);
 					Matcher m = p.matcher(baos.toString());
@@ -351,7 +351,7 @@ public class Assignment
                     break;
                 }
                 else{
-                    if(i==methods.size()){
+                    if(i==methods.size()-1){
                         reqs.add(new Requirement("Method "+methodName+"?",pointsPerReq*4,0,"Not found"));
                         break;
                     }
