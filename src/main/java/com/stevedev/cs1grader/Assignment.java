@@ -164,7 +164,8 @@ public class Assignment
                 return cstruct.newInstance(argValues);
             }
             catch(Exception e){
-                e.printStackTrace();
+                System.err.println("Failure in creating "+className+" object");
+                //e.printStackTrace();
                 return null;
             }
         }
@@ -320,7 +321,8 @@ public class Assignment
                 Matcher m = p.matcher(codeToCheck);
                 return m.find();
             }catch(Exception e){
-                e.printStackTrace();
+                System.err.println("Failure in regex comparison");
+                //e.printStackTrace();
                 return false;
             }
         }
@@ -435,7 +437,8 @@ public class Assignment
 			studentGradeFile.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+                    System.err.println("Failure in writing to student grade");
+			//e.printStackTrace();
 		}
 	}
 
@@ -468,7 +471,8 @@ public class Assignment
 			masterGradeFile.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+                    System.err.println("Failure in writing to master grade");
+                    //e.printStackTrace();
 		}
 	}
 

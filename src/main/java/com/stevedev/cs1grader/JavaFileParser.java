@@ -52,7 +52,7 @@ public class JavaFileParser {
             in.close();
             return pc;
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }
