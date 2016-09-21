@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 steve
  *
  * This program is free software; you can redistribute it and/or
@@ -17,39 +17,37 @@
  */
 package com.stevedev.cs1grader;
 
-import java.util.ArrayList;
-
 /**
- * Object that contains static text from a single java file for each gradable part of a class.
+ * Object that contains the static text associated with a single field in the class
  * @author steve
- * @version 2016.09.17
+ * @version 2016.09.20
  */
-public class ParsedClass {
+public class ParsedField {
     private String name;
-    private String introComments;
-    private ArrayList<ParsedField> fields;
-    private ArrayList<ParsedMethod> methods;
+    private String type;
+    private String value;
+    private String declaration;
     
-    public ParsedClass(String n, String i, ArrayList<ParsedField> f, ArrayList<ParsedMethod> m){
+    public ParsedField(String n, String t, String v, String d){
         name = n;
-        introComments = i;
-        fields = f;
-        methods = m;
+        type = t;
+        value = v;
+        declaration = d;
     }
     
     public String getName(){
         return name;
     }
     
-    public String getComments(){
-        return introComments;
+    public String getType(){
+        return type;
     }
     
-    public ArrayList<ParsedField> getFields(){
-        return fields;
+    public String getValue(){
+        return value;
     }
     
-    public ArrayList<ParsedMethod> getMethods(){
-        return methods;
+    public String getDeclaration(){
+        return declaration;
     }
 }

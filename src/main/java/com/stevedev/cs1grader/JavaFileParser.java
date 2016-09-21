@@ -52,7 +52,7 @@ public class JavaFileParser {
             in.close();
             return pc;
         }catch(Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }
@@ -83,15 +83,20 @@ public class JavaFileParser {
      * @param cu CompilationUnit from JavaParser
      * @return ArrayList of Strings to be used for the ParsedClass
      */
-    private static ArrayList<String> buildFields(CompilationUnit cu){
-        ArrayList<String> fields = new ArrayList();
+    private static ArrayList<ParsedField> buildFields(CompilationUnit cu){
+        ArrayList<ParsedField> fields = new ArrayList();
         List<TypeDeclaration> types = cu.getTypes();
         for(TypeDeclaration type:types){
             List<BodyDeclaration> members = type.getMembers();
             for(BodyDeclaration member:members){
                 if(member instanceof FieldDeclaration){
                     FieldDeclaration f = (FieldDeclaration)member;
-                    fields.add(f.toStringWithoutComments().trim());
+                    System.out.println("Name:"+f.getVariables().get(0).getId().getName().trim());
+                    System.out.println("Type:"+f.getType().toStringWithoutComments());
+                    System.out.println("Value:"+f.getVariables().get(0).getInit().toStringWithoutComments().trim());
+                    System.out.println("Declaration:"+f.toStringWithoutComments().trim());
+                    
+                    fields.add(new ParsedField(f.getVariables().get(0).getId().getName().trim(),f.getType().toStringWithoutComments(),f.getVariables().get(0).getInit().toStringWithoutComments().trim() ,f.toStringWithoutComments().trim()));
                 }
             }
         }
@@ -105,7 +110,7 @@ public class JavaFileParser {
      * @param methods ArrayList of ParsedMethod objects that represent methods
      * @return The final ParsedClass object
      */
-    private static ParsedClass buildClass(CompilationUnit cu, ArrayList<String> fields,ArrayList<ParsedMethod> methods){
+    private static ParsedClass buildClass(CompilationUnit cu, ArrayList<ParsedField> fields,ArrayList<ParsedMethod> methods){
         List<TypeDeclaration> types = cu.getTypes();
         for(TypeDeclaration type:types){
             if(type instanceof ClassOrInterfaceDeclaration){

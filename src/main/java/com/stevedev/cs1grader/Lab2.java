@@ -37,7 +37,7 @@ public class Lab2 extends Assignment
         if(requirements.get(0).getReceived()>0 &&requirements.get(1).getReceived()>0)
         {
             requirements.addAll(lab.checkFields());
-            requirements.addAll(lab.checkMethodsSyntax());
+            requirements.addAll(lab.checkMethodSyntax());
             requirements.addAll(lab.checkMethodOutput());
         }
         grade(requirements,args.length>0?Boolean.parseBoolean(args[0]):false);
@@ -55,14 +55,16 @@ public class Lab2 extends Assignment
     }
     
     public ArrayList<Requirement> checkFields(){
-        String EMPLOYEE_UN = "^public( )+static( )+final( )+String( )+EMPLOYEE_UN( )*=( )*\""+getUsername()+"\"( )*;$";
-        String BANANA_COST = "^public( )+static( )+final( )+double( )+BANANA_COST( )*=( )*((\\d)+|(\\d)+\\.(\\d)*)( )*;$";
-        String[] requiredFields = {EMPLOYEE_UN,BANANA_COST};
-        return checkFieldsExist(parsedClass,requiredFields,3);
+        ArrayList<Requirement> reqs = new ArrayList();
+        reqs.add(checkFieldExists(parsedClass,"EMPLOYEE_UN",
+                "^public( )+static( )+final( )+String( )+EMPLOYEE_UN( )*=( )*\""+getUsername()+"\"( )*;$",3));
+        reqs.add(checkFieldExists(parsedClass,"BANANA_COST",
+                "^public( )+static( )+final( )+double( )+BANANA_COST( )*=( )*((\\d)+|(\\d)+\\.(\\d)*)( )*;$",3));
+        return reqs;
     }
     
     
-    public ArrayList<Requirement> checkMethodsSyntax(){
+    public ArrayList<Requirement> checkMethodSyntax(){
         ArrayList<Requirement> methodReqs=new ArrayList();
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"main",
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",

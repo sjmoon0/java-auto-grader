@@ -331,16 +331,26 @@ public class Assignment
          * Checks the ParsedClass for the existence of a field, returns 
          * a gradable requirement depending on regex matching
          * @param parsedClass The ParsedClass object to be searched
-         * @param fieldRegexes An Array of Strings that represent patterns to be tested
+         * @param fieldName The name of the field
+         * @param fieldRegex An String that represents patterns to be tested
          * @param pointPerField The bumber of points for each field in the fieldRegexes
          * @return Gradable requirements
          */
-        public ArrayList<Requirement> checkFieldsExist(ParsedClass parsedClass,String[] fieldRegexes,int pointPerField){
-            ArrayList<String> fields = parsedClass.getFields();
+        public Requirement checkFieldExists(ParsedClass parsedClass,String fieldName, String fieldRegex,int pointPerField){
+            ArrayList<ParsedField> fields = parsedClass.getFields();
             ArrayList<Requirement> reqs = new ArrayList();
             for(int i=0;i<fields.size();++i){
+                if(fieldName.equals(fields.get(i).getName())){
+                    if(assertCodeExistsRegex(fields.get(i).getDeclaration(),fieldRegex)){
+                        return new Requirement("Class Variable: "+fieldName+" exists?",pointPerField,pointPerField,"Correct!");
+                    }
+                }
+            }
+            return new Requirement("Class variable: "+fieldName+" exists?",pointPerField,0,"Not found. Check spelling and data type.");
+            /*
+            for(int i=0;i<fields.size();++i){
                 for(int j=0; j<fieldRegexes.length;++j){
-                    if(assertCodeExistsRegex(fields.get(i),fieldRegexes[j])){
+                    if(assertCodeExistsRegex(fields.get(i).getDeclaration(),fieldRegexes[j])){
                         reqs.add(new Requirement("Class Variable: "+fields.get(i)+" exists?",pointPerField,pointPerField,"Correct!"));
                     }
                 }
@@ -348,10 +358,10 @@ public class Assignment
             if(reqs.size()<fieldRegexes.length){
                 int numMissing = fieldRegexes.length-reqs.size();
                 for(int i=0; i<numMissing;++i){
-                    reqs.add(new Requirement("Class Variable",pointPerField,0,"Missing class variable or incorrect name. Check class variable declarations and Lab document."));
+                    reqs.add(new Requirement("Class Variable"+fieldName,pointPerField,0,"Missing. Check class variable declarations and Lab document."));
                 }
             }
-            return reqs;
+            */
         }
         
         /**
@@ -370,22 +380,16 @@ public class Assignment
             ArrayList<Requirement> reqs = new ArrayList();
             for(int i=0;i<methods.size();++i){
                 if(methodName.equals(methods.get(i).getName())){
-                    System.out.println(methods.get(i).getComments());
-                    System.out.println("::::::::::::::::::::::::::");
                     if(assertCodeExistsRegex(methods.get(i).getComments(),commentRegex)){
                         reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,pointsPerReq,"Correct!"));
                     }else{
                         reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,0,"Incorrect"));
                     }
-                    System.out.println(methods.get(i).getHeader());
-                    System.out.println("::::::::::::::::::::::::::");
                     if(assertCodeExistsRegex(methods.get(i).getHeader(),headerRegex)){
                         reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,pointsPerReq,"Correct!"));
                     }else{
                         reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,0,"Incorrect"));
                     }
-                    System.out.println(methods.get(i).getBody());
-                    System.out.println("::::::::::::::::::::::::::");
                     if(assertCodeExistsRegex(methods.get(i).getBody(),bodyRegex)){
                         reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,pointsPerReq*2,"Correct!"));
                     }else{
