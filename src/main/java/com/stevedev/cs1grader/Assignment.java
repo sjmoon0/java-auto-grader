@@ -347,21 +347,6 @@ public class Assignment
                 }
             }
             return new Requirement("Class variable: "+fieldName+" exists?",pointPerField,0,"Not found. Check spelling and data type.");
-            /*
-            for(int i=0;i<fields.size();++i){
-                for(int j=0; j<fieldRegexes.length;++j){
-                    if(assertCodeExistsRegex(fields.get(i).getDeclaration(),fieldRegexes[j])){
-                        reqs.add(new Requirement("Class Variable: "+fields.get(i)+" exists?",pointPerField,pointPerField,"Correct!"));
-                    }
-                }
-            }
-            if(reqs.size()<fieldRegexes.length){
-                int numMissing = fieldRegexes.length-reqs.size();
-                for(int i=0; i<numMissing;++i){
-                    reqs.add(new Requirement("Class Variable"+fieldName,pointPerField,0,"Missing. Check class variable declarations and Lab document."));
-                }
-            }
-            */
         }
         
         /**
@@ -375,7 +360,7 @@ public class Assignment
          * @param pointsPerReq Points per requirement. Methods have requirements about method comment,header, and body
          * @return 
          */
-        public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
+        public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String[] params, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
             ArrayList<ParsedMethod> methods = parsedClass.getMethods();
             ArrayList<Requirement> reqs = new ArrayList();
             for(int i=0;i<methods.size();++i){
@@ -407,6 +392,14 @@ public class Assignment
             }
             return reqs;
         }
+        
+        /*
+        public Requirement assertMethodReturn(){
+            
+        }
+       
+        public Requirement 
+        */
 
 	/**
 	* "Grades" a list of requirments by writing them to the student grade text file.

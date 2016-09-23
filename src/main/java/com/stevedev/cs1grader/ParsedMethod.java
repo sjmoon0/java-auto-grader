@@ -17,6 +17,8 @@
  */
 package com.stevedev.cs1grader;
 
+import java.util.ArrayList;
+
 /**
  * Object that contains static text of a method from a single java file.
  * @author steve
@@ -26,12 +28,14 @@ public class ParsedMethod {
     private String name;
     private String comments;
     private String header;
+    private ArrayList<String> params;
     private String body;
     
-    public ParsedMethod(String n,String c, String h, String b){
+    public ParsedMethod(String n,String c, String h, ArrayList<String> p, String b){
         name = n;
         comments = c;
         header = h;
+        params = p;
         body = b;
     }
     public String getName(){

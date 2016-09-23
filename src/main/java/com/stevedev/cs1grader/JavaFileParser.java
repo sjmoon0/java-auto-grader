@@ -71,7 +71,11 @@ public class JavaFileParser {
                 if(member instanceof MethodDeclaration){
                     MethodDeclaration m = (MethodDeclaration)member;
                     String comments = (m.getJavaDoc()==null ? "":m.getJavaDoc().toString());
-                    pm.add(new ParsedMethod(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),m.getBody().toStringWithoutComments().trim()));
+                    ArrayList<String> params = new ArrayList();
+                    for(int i=0;i<m.getParameters().size();++i){
+                        params.add(m.getParameters().get(i).getType().toString());
+                    }
+                    pm.add(new ParsedMethod(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),params,m.getBody().toStringWithoutComments().trim()));
                 }
             }
         }
@@ -91,11 +95,6 @@ public class JavaFileParser {
             for(BodyDeclaration member:members){
                 if(member instanceof FieldDeclaration){
                     FieldDeclaration f = (FieldDeclaration)member;
-                    System.out.println("Name:"+f.getVariables().get(0).getId().getName().trim());
-                    System.out.println("Type:"+f.getType().toStringWithoutComments());
-                    System.out.println("Value:"+f.getVariables().get(0).getInit().toStringWithoutComments().trim());
-                    System.out.println("Declaration:"+f.toStringWithoutComments().trim());
-                    
                     fields.add(new ParsedField(f.getVariables().get(0).getId().getName().trim(),f.getType().toStringWithoutComments(),f.getVariables().get(0).getInit().toStringWithoutComments().trim() ,f.toStringWithoutComments().trim()));
                 }
             }
