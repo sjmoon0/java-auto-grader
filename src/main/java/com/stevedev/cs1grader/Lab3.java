@@ -37,6 +37,7 @@ public class Lab3 extends Assignment {
         {
             requirements.addAll(lab.checkFields());
             requirements.addAll(lab.checkMethodSyntax());
+            requirements.addAll(lab.checkMethodReturns());
             requirements.addAll(lab.checkMethodOutput());
         }
         grade(requirements,args.length>0?Boolean.parseBoolean(args[0]):false);
@@ -63,24 +64,143 @@ public class Lab3 extends Assignment {
     
     public ArrayList<Requirement> checkMethodSyntax(){
         ArrayList<Requirement> methodReqs=new ArrayList();
-        methodReqs.addAll(checkMethodCorrectness(parsedClass,"main",
-                new String[] {"String[]"},
-                "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
-                "^public( )+static( )+void( )+main( )*\\(( )*String( )*\\[( )*\\]( )+args( )*\\)$",
-                "",3));
+//        methodReqs.addAll(checkMethodCorrectness(parsedClass,"main",
+//                new String[] {"String[]"},
+//                "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
+//                "^public( )+static( )+void( )+main( )*\\(( )*String( )*\\[( )*\\]( )+args( )*\\)$",
+//                "",3));
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"add",
-                new String[] {"double"},
-                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*sum.*$",
+                new String[] {"double","double"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(s|S)um.*$",
                 "^public( )+static( )+double( )+add( )*\\(( )*double( )+num1( )*,( )*double( )+num2( )*\\)$",
-                "^\\{.*(num1( )*\\+( )*num2|num2( )*\\+( )*num1).*\\}$",3));
+                "^\\{.*(num1( )*\\+( )*num2|num2( )*\\+( )*num1).*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"add",
+                new String[] {"int","int"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(s|S)um.*$",
+                "^public( )+static( )+int( )+add( )*\\(( )*int( )+num1( )*,( )*int( )+num2( )*\\)$",
+                "^\\{.*(num1( )*\\+( )*num2|num2( )*\\+( )*num1).*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"subtract",
+                new String[] {"double","double"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(d|D)ifference.*$",
+                "^public( )+static( )+double( )+subtract( )*\\(( )*double( )+num1( )*,( )*double( )+num2( )*\\)$",
+                "^\\{.*num1( )*\\-( )*num2.*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"subtract",
+                new String[] {"int","int"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(d|D)ifference.*$",
+                "^public( )+static( )+int( )+subtract( )*\\(( )*int( )+num1( )*,( )*int( )+num2( )*\\)$",
+                "^\\{.*num1( )*\\-( )*num2.*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"multiply",
+                new String[] {"double","double"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(p|P)roduct.*$",
+                "^public( )+static( )+double( )+multiply( )*\\(( )*double( )+num1( )*,( )*double( )+num2( )*\\)$",
+                "^\\{.*(num1( )*\\*( )*num2|num2( )*\\*( )*num1).*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"multiply",
+                new String[] {"int","int"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(p|P)roduct.*$",
+                "^public( )+static( )+int( )+multiply( )*\\(( )*int( )+num1( )*,( )*int( )+num2( )*\\)$",
+                "^\\{.*(num1( )*\\*( )*num2|num2( )*\\*( )*num1).*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"modulo",
+                new String[] {"int","int"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(r|R)emainder.*$",
+                "^public( )+static( )+int( )+modulo( )*\\(( )*int( )+num1( )*,( )*int( )+num2( )*\\)$",
+                "^\\{.*num1( )*%( )*num2.*\\}$",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"divideIntToDouble",
+                new String[] {"int","int"},
+                "^/\\*\\*.*@param( )+num1.*@param( )+.*num2.*@return.*(q|Q)uotient.*$",
+                "^public( )+static( )+double( )+divideIntToDouble( )*\\(( )*int( )+num1( )*,( )*int( )+num2( )*\\)$",
+                "^\\{.*(\\(( )*double( )*\\)( )*num1( )*/( )*num2|num1( )*/( )*\\(( )*double( )*\\)( )*num2).*\\}",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"power",
+                new String[] {"double","int"},
+                "^/\\*\\*.*@param( )+base.*@param( )+.*exponent.*@return.*(p|P)ower.*$",
+                "^public( )+static( )+double( )+power( )*\\(( )*double( )+base( )*,( )*int( )+exponent( )*\\)$",
+                "^\\{.*double( )+result( )*=( )*1( )*;.*for.*\\{.*result( )*\\*.*base.*\\}.*return( )+result.*\\}",2));
+        methodReqs.addAll(checkMethodCorrectness(parsedClass,"concatenate",
+                new String[] {"String","String"},
+                "^/\\*\\*.*@param( )+str1.*@param( )+.*str2.*@return.*$",
+                "^public( )+static( )+String( )+concatenate( )*\\(( )*String( )+str1( )*,( )*String( )+str2( )*\\)$",
+                "^\\{.*str1( )*\\+( )*str2.*\\}$",2));
+        return methodReqs;
+    }
+    
+    public ArrayList<Requirement> checkMethodReturns(){
+        ArrayList<Requirement> methodReqs = new ArrayList();
+        methodReqs.add(checkMethodReturnType(testObj,"add",
+                new Class[]{double.class,double.class},
+                new Object[]{2,3},
+                double.class,
+                5.0,2));
+        methodReqs.add(checkMethodReturnType(testObj,"add",
+                new Class[]{int.class,int.class},
+                new Object[]{2,3},
+                int.class,
+                5,2));
+        methodReqs.add(checkMethodReturnType(testObj,"subtract",
+                new Class[]{double.class,double.class},
+                new Object[]{2.0,3.0},
+                double.class,
+                -1.0,2));
+        methodReqs.add(checkMethodReturnType(testObj,"subtract",
+                new Class[]{int.class,int.class},
+                new Object[]{2,3},
+                int.class,
+                -1,2));
+        methodReqs.add(checkMethodReturnType(testObj,"multiply",
+                new Class[]{double.class,double.class},
+                new Object[]{2.0,3.0},
+                double.class,
+                6.0,2));
+        methodReqs.add(checkMethodReturnType(testObj,"multiply",
+                new Class[]{int.class,int.class},
+                new Object[]{2,3},
+                int.class,
+                6,2));
+        methodReqs.add(checkMethodReturnType(testObj,"modulo",
+                new Class[]{int.class,int.class},
+                new Object[]{5,2},
+                int.class,
+                1,2));
+        methodReqs.add(checkMethodReturnType(testObj,"divideIntToDouble",
+                new Class[]{int.class,int.class},
+                new Object[]{5,2},
+                double.class,
+                2.5,2));
+        methodReqs.add(checkMethodReturnType(testObj,"power",
+                new Class[]{double.class,int.class},
+                new Object[]{2.0,3},
+                double.class,
+                8.0,2));
+        methodReqs.add(checkMethodReturnType(testObj,"concatenate",
+                new Class[]{String.class,String.class},
+                new Object[]{"abc","def"},
+                int.class,
+                "abcdef",2));
         return methodReqs;
     }
     
     public ArrayList<Requirement> checkMethodOutput(){
         ArrayList<Requirement> methodReqs = new ArrayList();
+        String nl = "\\R";
+        String mainOutput= "^Welcome to "+getUsername()+"'s Wonky Calculator"+nl+
+                "Please input your first integer:"+nl+
+                "Please input your second integer:"+nl+
+                "Please input your first decimal:"+nl+
+                "Please input your second decimal:"+nl+
+                "Please input your first String:"+nl+
+                "Please input your second String:"+nl+
+                "Sum of doubles \\= 3\\.\\d+"+nl+
+                "Sum of ints \\= 9"+nl+
+                "Difference of doubles \\= 1\\.\\d+"+nl+
+                "Difference of ints \\= 1"+nl+
+                "Product of doubles \\= 3\\.\\d\\d+"+nl+
+                "Product of ints \\= 20"+nl+
+                "Remainder of ints \\= 1"+nl+
+                "Decimal quotient of ints \\= 1\\.\\d\\d+"+nl+
+                "2.4 to the power of 5 \\= 79\\.\\d+"+nl+
+                "Concatenation of Strings \\= abcdef$"
+                ;
         methodReqs.add(assertSystemOutputRegex(testObj,
                 "main",new Class[] {String[].class},new Object[] {new String[]{""}},
-                "^$",5));
+                mainOutput,10));
         return methodReqs;
     }
 }

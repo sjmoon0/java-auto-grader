@@ -24,7 +24,6 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import static com.stevedev.cs1grader.Assignment.printDirInfo;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;

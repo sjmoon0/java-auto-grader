@@ -47,6 +47,13 @@ public class ParsedMethod {
     public String getHeader(){
         return header;
     }
+    /**
+     * 
+     * @return String versions of Parameter types that the method takes
+     */
+    public ArrayList<String> getParams(){
+        return params;
+    }
     public String getBody(){
         return body;
     }

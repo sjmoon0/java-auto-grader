@@ -53,7 +53,7 @@ public class Assignment
 	private static FileWriter studentGradeFile;
 	private static FileWriter masterGradeFile;
 	private static HashSet<String> STUDENTS;
-	private static final int IC_POINTS=3;//Points for initial conditions. Decrease for subsequent labs
+	private static final int IC_POINTS=2;//Points for initial conditions. Decrease for subsequent labs
 
 	/**
 	* Assignment constructor
@@ -265,42 +265,43 @@ public class Assignment
 	*/
 	public Requirement assertSystemOutputRegex(Object testObj, String methodName,Class[] paramTypes,Object[] paramValues, String targetRegex, int pointsPossible){
 		try{
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(baos);
-                        PrintStream old = System.out;
-			Class<?> getclass = testObj.getClass();
-			Method check = getclass.getMethod(methodName,paramTypes);
-			if(check!=null){
-                                System.setOut(ps);
-				check.invoke(testObj,(Object[])paramValues);
-				if(baos.toString().length()>0 ){
-					Pattern p = Pattern.compile(targetRegex);
-					Matcher m = p.matcher(baos.toString());
-					if(m.find()){
-						System.out.flush();
-			    		System.setOut(old);
-						System.out.print(baos.toString());
-						return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible,"Correct!");
-					}
-					else{
-						System.out.flush();
-                                                System.setOut(old);
-						System.out.print(baos.toString());
-						return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible/2,
-							"Incorrect Output. Check requirements for spelling, spacing, character order, and capitalization");
-					}
-				}
-				System.out.flush();
-	    		System.setOut(old);
-				System.out.print(baos.toString());
-	    		return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
-			}
-			else{
-				System.out.flush();
-	    		System.setOut(old);
-				System.out.print(baos.toString());
-				return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
-			}
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    PrintStream ps = new PrintStream(baos);
+                    PrintStream old = System.out;
+                    Class<?> getclass = testObj.getClass();
+                    Method check = getclass.getMethod(methodName,paramTypes);
+                    if(check!=null){
+                            System.setOut(ps);
+                            check.invoke(testObj,(Object[])paramValues);
+                            if(baos.toString().length()>0 ){
+                                    Pattern p = Pattern.compile(targetRegex);
+                                    Matcher m = p.matcher(baos.toString());
+                                    //System.out.println(baos.toString());
+                                    if(m.find()){
+                                            System.out.flush();
+                                    System.setOut(old);
+                                            System.out.print(baos.toString());
+                                            return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                                    }
+                                    else{
+                                            System.out.flush();
+                                            System.setOut(old);
+                                            System.out.print(baos.toString());
+                                            return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible/2,
+                                                    "Incorrect Output. Check requirements for spelling, spacing, character order, and capitalization");
+                                    }
+                            }
+                            System.out.flush();
+                            System.setOut(old);
+                            //System.out.print(baos.toString());
+                    return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
+                    }
+                    else{
+                            System.out.flush();
+                    System.setOut(old);
+                            System.out.print(baos.toString());
+                            return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
+                    }
 		}catch(Exception e){
 			e.printStackTrace();
 			return new Requirement("Output?:"+methodName,pointsPossible,0,"Could not find method: "+
@@ -364,7 +365,7 @@ public class Assignment
             ArrayList<ParsedMethod> methods = parsedClass.getMethods();
             ArrayList<Requirement> reqs = new ArrayList();
             for(int i=0;i<methods.size();++i){
-                if(methodName.equals(methods.get(i).getName())){
+                if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
                     if(assertCodeExistsRegex(methods.get(i).getComments(),commentRegex)){
                         reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,pointsPerReq,"Correct!"));
                     }else{
@@ -393,16 +394,61 @@ public class Assignment
             return reqs;
         }
         
-        /*
-        public Requirement assertMethodReturn(){
-            
+        /**
+         * checkMethodCorrectness helper method
+         * @param foundParams Parameters found during the checkMethodCorrectness method search
+         * @param targetParams Expected param types for the method
+         * @return True if the found params all equal the target params in the correct order
+         */
+        private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
+            int j=0;
+            for(String paramType:foundParams){
+                if(j>=targetParams.length){
+                    return false;
+                }
+                if(!foundParams.get(j).equals(targetParams[j])){
+                    return false;
+                }
+                j++;
+            }
+            return true;
         }
-       
-        public Requirement 
-        */
+        
+        /**
+         * Checks to make sure the actual type returned matches the expected return type.
+         * Doesn't yet compare return values.
+         * @param testObj The instance of the student implemented class.
+         * @param methodName The name of the method being returned
+         * @param paramTypes Array of class types for the method parameters
+         * @param paramValues Array of object types for the method parameters
+         * @param targetReturnType Class data type expected to be returned
+         * @param targetReturnValue Object data value expected to be returned
+         * @param pointsPossible points for the requirement that tests proper return type
+         * @return Whether or not the return type matches what's expected
+         */
+        public Requirement checkMethodReturnType(Object testObj, String methodName,Class[] paramTypes,Object[] paramValues, Class targetReturnType, Object targetReturnValue, int pointsPossible){
+            try{
+                Class<?> getclass = testObj.getClass();
+                Method check = getclass.getMethod(methodName,paramTypes);
+                if(check!=null){
+                    Object actualReturnValue = check.invoke(testObj,(Object[])paramValues);
+                    if(actualReturnValue.getClass().toString().equals(targetReturnValue.getClass().toString())){
+                        return new Requirement("Return Type?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                    }
+                    return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Incorrect return data type");
+                }
+                else{
+                    return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Could not find method: "+
+                            methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
+            }
+        }
 
 	/**
-	* "Grades" a list of requirments by writing them to the student grade text file.
+	* "Grades" a list of requirements by writing them to the student grade text file.
 	* Writes to master grade csv depending on isMaster parameter
 	* @param ral List of Requirements to be graded
 	* @param isMaster True causes the program to write to a master grade file. Use only if doing batch grading
