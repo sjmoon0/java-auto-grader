@@ -19,7 +19,9 @@ package com.stevedev.cs1grader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -193,7 +195,6 @@ public class Assignment
 	*
 	*/
 	public static String getUsername(){
-            	
             if(un !=null && !un.equals("")){
 			return un;
 		}
@@ -268,10 +269,12 @@ public class Assignment
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     PrintStream ps = new PrintStream(baos);
                     PrintStream old = System.out;
+                    InputStream oldin = System.in;
                     Class<?> getclass = testObj.getClass();
                     Method check = getclass.getMethod(methodName,paramTypes);
                     if(check!=null){
                             System.setOut(ps);
+                            System.setIn(getClass().getResourceAsStream("/input.txt"));
                             check.invoke(testObj,(Object[])paramValues);
                             if(baos.toString().length()>0 ){
                                     Pattern p = Pattern.compile(targetRegex);
@@ -279,13 +282,14 @@ public class Assignment
                                     //System.out.println(baos.toString());
                                     if(m.find()){
                                             System.out.flush();
-                                    System.setOut(old);
+                                            System.setOut(old);
                                             System.out.print(baos.toString());
                                             return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible,"Correct!");
                                     }
                                     else{
                                             System.out.flush();
                                             System.setOut(old);
+                                            System.setIn(oldin);
                                             System.out.print(baos.toString());
                                             return new Requirement("Output?:"+methodName,pointsPossible,pointsPossible/2,
                                                     "Incorrect Output. Check requirements for spelling, spacing, character order, and capitalization");
@@ -293,12 +297,14 @@ public class Assignment
                             }
                             System.out.flush();
                             System.setOut(old);
+                            System.setIn(oldin);
                             //System.out.print(baos.toString());
                     return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
                     }
                     else{
                             System.out.flush();
-                    System.setOut(old);
+                            System.setOut(old);
+                            System.setIn(oldin);
                             System.out.print(baos.toString());
                             return new Requirement("Output?:"+methodName,pointsPossible,0,"No output printed to console");
                     }
