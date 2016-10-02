@@ -97,9 +97,9 @@ public class Assignment
                     System.out.println(parentFolder.toString());
                     Class<?> c = Class.forName(mainClass,true,new URLClassLoader(new URL[]{parentFolder}));
 		}catch(Exception e){
-			return new Requirement("Class Exists?",IC_POINTS,0, mainClass+".java not found");
+			return new Requirement("Class:"+mainClass+" Exists?",IC_POINTS,0, mainClass+".java not found");
 		}
-		return new Requirement("Class Exists?",IC_POINTS,IC_POINTS,"Correct!");
+		return new Requirement("Class:"+mainClass+" Exists?",IC_POINTS,IC_POINTS,"Correct!");
 	}
 
 	/**
@@ -274,7 +274,7 @@ public class Assignment
                     Method check = getclass.getMethod(methodName,paramTypes);
                     if(check!=null){
                             System.setOut(ps);
-                            System.setIn(getClass().getResourceAsStream("/input.txt"));
+                            System.setIn(getClass().getResourceAsStream("/input/"+type+num+"input.txt"));
                             check.invoke(testObj,(Object[])paramValues);
                             if(baos.toString().length()>0 ){
                                     Pattern p = Pattern.compile(targetRegex);
@@ -418,6 +418,32 @@ public class Assignment
                 j++;
             }
             return true;
+        }
+        
+        /**
+         * Checks to see if supplied regular expression can be found within a method and returns a 
+         * Requirement object with a provided description.
+         * @param parsedClass The static text of the class
+         * @param methodName The method to be checked
+         * @param params The parameters of the method being checked
+         * @param reqDesc A text description of the what is expected in the method
+         * @param targetRegex The regular expression to be found
+         * @param points The number of points that this requirement is worth
+         * @return Gradable Requirement object
+         */
+        public Requirement checkMethodBodyContains(ParsedClass parsedClass, String methodName, String[] params, String reqDesc, String targetRegex, int points){
+            ArrayList<ParsedMethod> methods = parsedClass.getMethods();
+            ArrayList<Requirement> reqs = new ArrayList();
+            for(int i=0;i<methods.size();++i){
+                if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
+                    if(assertCodeExistsRegex(methods.get(i).getBody(),targetRegex)){
+                        return new Requirement(methodName+" contains "+reqDesc+"?",points,points,"Correct!");
+                    }else{
+                        return new Requirement(methodName+" contains "+reqDesc+"?",points,0,"Incorrect");
+                    }
+                }
+            }
+            return new Requirement(methodName+" contains "+reqDesc+"?",points,0,"Not found");
         }
         
         /**
