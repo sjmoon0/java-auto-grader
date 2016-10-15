@@ -46,7 +46,7 @@ public class Lab4 extends Assignment{
     }
     
     public Lab4(){
-        super("Lab",4);
+        super("Lab",4,false);
         brObj = getInstance(PACKAGE_NAME+"."+MAIN_CLASS,null,null);
         wcObj = getInstance(PACKAGE_NAME+".WonkyCalculator",null,null);
         bsObj = getInstance(PACKAGE_NAME+".BananaStand",null,null);

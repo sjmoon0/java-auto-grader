@@ -45,7 +45,7 @@ public class Lab2 extends Assignment
 
     public Lab2()
     {
-        super("Lab",2);
+        super("Lab",2,false);
         testObj = getInstance(MAIN_CLASS,null,null);
         parsedClass = JavaFileParser.parse(MAIN_CLASS);
         if(parsedClass==null){

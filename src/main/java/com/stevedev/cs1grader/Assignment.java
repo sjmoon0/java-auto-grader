@@ -55,6 +55,7 @@ public class Assignment
 	private static FileWriter studentGradeFile;
 	private static FileWriter masterGradeFile;
 	private static HashSet<String> STUDENTS;
+        private static boolean usingNetbeans;
 	private static final int IC_POINTS=2;//Points for initial conditions. Decrease for subsequent labs
 
 	/**
@@ -62,9 +63,10 @@ public class Assignment
 	* @param type "Lab" or "Project"
 	* @param num lab or project number
 	*/
-	public Assignment(String type, int num){
+	public Assignment(String type, int num, boolean useNetbeans){
 		this.type=type;
 		this.num=num;
+                this.usingNetbeans=useNetbeans;
 		this.un=getUsername();
 		initializeStudents();
 	}
@@ -93,8 +95,14 @@ public class Assignment
 	private static Requirement checkClassExists(String mainClass){
 		try{
                     URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
-                    URL parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().lastIndexOf("/"))+"/");
-                    System.out.println(parentFolder.toString());
+                    URL parentFolder;
+                    if(usingNetbeans){
+                        parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().substring(0,location.getFile().lastIndexOf("/")).lastIndexOf("/"))+"/build/classes/");
+                    }
+                    else{
+                        parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().lastIndexOf("/"))+"/");
+                    }
+                    //System.out.println(parentFolder.toString());
                     Class<?> c = Class.forName(mainClass,true,new URLClassLoader(new URL[]{parentFolder}));
 		}catch(Exception e){
 			return new Requirement("Class:"+mainClass+" Exists?",IC_POINTS,0, mainClass+".java not found");
@@ -141,7 +149,7 @@ public class Assignment
 	private static Requirement checkDirectoryName(){
 		URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
 		String[] dirnames = location.getFile().split("/");
-		String currdir = dirnames[dirnames.length-2];
+		String currdir = dirnames[dirnames.length-(usingNetbeans?4:2)];
 		if(STUDENTS.contains(currdir.split("_")[1].toLowerCase()) && currdir.split("_")[0].toLowerCase().equals(type.toLowerCase()+num)){
 			return new Requirement("Directory Name?",IC_POINTS,IC_POINTS,"Correct!");
 		}
@@ -159,8 +167,18 @@ public class Assignment
             //System.out.println("getInstance:");printDirInfo();
             try{
                 URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
-                URL parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().lastIndexOf("/"))+"/");
-                //System.out.println(parentFolder.toString());
+                URL parentFolder;
+                if(usingNetbeans){
+                    parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().substring(0,location.getFile().lastIndexOf("/")).lastIndexOf("/"))+"/build/classes/");
+//                    System.out.println("0::"+location.getFile().toString());
+//                    System.out.println("1::"+location.getFile().substring(0,location.getFile().lastIndexOf("/")));
+//                    System.out.println("2::"+location.getFile().substring(0,location.getFile().lastIndexOf("/")).substring(0,location.getFile().substring(0,location.getFile().lastIndexOf("/")).lastIndexOf("/")));
+                }
+                else{
+                    parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().lastIndexOf("/"))+"/");
+                }
+                //printDirInfo();
+                System.out.println(parentFolder.toString());
                 Class<?> c = Class.forName(className,true,new URLClassLoader(new URL[]{parentFolder}));
                 Constructor<?> cstruct = c.getConstructor(argTypes);
                 return cstruct.newInstance(argValues);
@@ -196,12 +214,12 @@ public class Assignment
 	*/
 	public static String getUsername(){
             if(un !=null && !un.equals("")){
-			return un;
-		}
-		URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
-		String[] dirnames = location.getFile().split("/");
-		String currdir = dirnames[dirnames.length-2];
-                return currdir.split("_")[1].trim();
+                    return un;
+            }
+            URL location = Assignment.class.getProtectionDomain().getCodeSource().getLocation();
+            String[] dirnames = location.getFile().split("/");
+            String currdir = dirnames[dirnames.length-(usingNetbeans?4:2)];
+            return currdir.split("_")[1].trim();
 	}
 
 	/**

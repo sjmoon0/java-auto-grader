@@ -49,7 +49,7 @@ public class Lab1 extends Assignment
 
     public Lab1()
     {
-            super("Lab",1);
+            super("Lab",1,false);
             testObj = getInstance(MAIN_CLASS,null,null);
     }
 
