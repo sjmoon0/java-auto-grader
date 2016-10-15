@@ -170,15 +170,11 @@ public class Assignment
                 URL parentFolder;
                 if(usingNetbeans){
                     parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().substring(0,location.getFile().lastIndexOf("/")).lastIndexOf("/"))+"/build/classes/");
-//                    System.out.println("0::"+location.getFile().toString());
-//                    System.out.println("1::"+location.getFile().substring(0,location.getFile().lastIndexOf("/")));
-//                    System.out.println("2::"+location.getFile().substring(0,location.getFile().lastIndexOf("/")).substring(0,location.getFile().substring(0,location.getFile().lastIndexOf("/")).lastIndexOf("/")));
                 }
                 else{
                     parentFolder = new URL("file://"+location.getFile().substring(0,location.getFile().lastIndexOf("/"))+"/");
                 }
-                //printDirInfo();
-                System.out.println(parentFolder.toString());
+                //System.out.println(parentFolder.toString());
                 Class<?> c = Class.forName(className,true,new URLClassLoader(new URL[]{parentFolder}));
                 Constructor<?> cstruct = c.getConstructor(argTypes);
                 return cstruct.newInstance(argValues);
@@ -536,12 +532,12 @@ public class Assignment
 	}
 
 	/**
-	* "Grades" a list of requirments by writing them to the master grade csv file.
+	* "Grades" a list of requirements by writing them to the master grade csv file.
 	* Master grade file located in ../../Grades/Master.csv
 	* @param ral List of Requirements to be graded
 	*/
 	private static void writeToMasterGrade(ArrayList<Requirement> ral){
-		String masterGradeFilePath = "..\\..\\..\\Grades\\"+type+num+"_Master.csv";
+		String masterGradeFilePath = (usingNetbeans?"..\\..\\":"")+"..\\..\\..\\Grades\\"+type+num+"_Master.csv";
 		try{
 			File f = new File(masterGradeFilePath);
 			if(!f.exists()&&!f.isDirectory()){

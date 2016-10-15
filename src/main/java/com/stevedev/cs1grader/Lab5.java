@@ -38,9 +38,9 @@ public class Lab5 extends Assignment{
         ArrayList<Requirement> requirements = checkInitialConditions(PACKAGE_NAME+"."+MAIN_CLASS);
         if(requirements.get(0).getReceived()>0 && requirements.get(1).getReceived()>0){
             requirements.addAll(lab.checkFields());
-            //requirements.addAll(lab.checkMethodSyntax());
+            requirements.addAll(lab.checkMethodSyntax());
             //requirements.addAll(lab.checkMethodReturns());
-            //requirements.addAll(lab.checkMethodOutput());
+            requirements.addAll(lab.checkMethodOutput());
         }
         grade(requirements, args.length>0?Boolean.parseBoolean(args[0]):false);
         
@@ -65,5 +65,35 @@ public class Lab5 extends Assignment{
         reqs.add(checkFieldExists(dClass, "DIE",
                 "^public( )+static( )+final( )+Random( )+DIE( )*=( )*new( )+Random( )*\\(( )*1234567890( )*\\)( )*;$",4));
         return reqs;
+    }
+    
+    public ArrayList<Requirement> checkMethodSyntax(){
+        ArrayList<Requirement> methodReqs=new ArrayList();
+        methodReqs.add(checkMethodBodyContains(yClass, "main",
+                new String[] {"String[]"},
+                "Ex.5: proper variable declarations",
+                "^.*int( )+score( )*=( )*0( )*;.*int( )+play( )*=( )*1( )*;.*int( )+currentRoll( )*=( )*1( )*;.*while.*$",
+                5));
+        methodReqs.add(checkMethodBodyContains(yClass, "main",
+                new String[] {"String[]"},
+                "Ex.6: while loop condition",
+                "^.*currentRoll.*while( )*\\(( )*(play( )*\\<( )*14|play( )*\\<=( )*13)( )*\\).*$",
+                5));
+        methodReqs.add(checkMethodBodyContains(yClass, "main",
+                new String[] {"String[]"},
+                "Ex.10: Scanner object after call to welcome",
+                "^.*welcome( )*\\(( )*\\).*Scanner( )+console( )*=( )*new( )* Scanner( )*\\(( )*System.in( )*\\).*while.*$",
+                5));
+        return methodReqs;
+    }
+    
+    public ArrayList<Requirement> checkMethodOutput(){
+        ArrayList<Requirement> methodReqs = new ArrayList();
+        String welcomeOutput = "Hello, welcome to "+getUsername()+"'s Yahtzee game!\\R"+
+                "Press Enter to roll 5 dice.";
+        methodReqs.add(assertSystemOutputRegex(yObject, 
+                "welcome", null,null,
+                welcomeOutput,5));
+        return methodReqs;
     }
 }
