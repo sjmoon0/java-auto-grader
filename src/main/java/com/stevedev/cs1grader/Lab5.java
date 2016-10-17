@@ -78,11 +78,52 @@ public class Lab5 extends Assignment{
                 new String[] {"String[]"},
                 "Ex.6: while loop condition",
                 "^.*currentRoll.*while( )*\\(( )*(play( )*\\<( )*14|play( )*\\<=( )*13)( )*\\).*$",
-                5));
+                4));
         methodReqs.add(checkMethodBodyContains(yClass, "main",
                 new String[] {"String[]"},
                 "Ex.10: Scanner object after call to welcome",
                 "^.*welcome( )*\\(( )*\\).*Scanner( )+console( )*=( )*new( )* Scanner( )*\\(( )*System.in( )*\\).*while.*$",
+                3));
+        methodReqs.add(checkMethodBodyContains(yClass, "main",
+                new String[] {"String[]"},
+                "Ex.12: call to prompt in while loop",
+                "^.*while.*prompt( )*\\(( )*currentRoll( )*==( )*3( )*\\).*$",
+                3));
+        methodReqs.addAll(checkMethodCorrectness(dClass, "rollDie",
+                null,
+                "^/\\*\\*.*@return.*\\*/$",
+                "^public( )+static( )+int( )+rollDie( )*\\(( )*\\).*$",
+                "^.*DIE\\.nextInt( )*\\(( )*6( )*\\)( )*\\+( )*1.*;.*$",
+                3));
+        methodReqs.addAll(checkMethodCorrectness(dClass, "rollNumDice",
+                new String[]{"int"},
+                "^/\\*\\*.*@param( )+num.*@return.*\\*/$",
+                "^public( )+static( )+String( )+rollNumDice( )*\\(( )*int( )*num( )*\\)$",
+                "^.*while.*rollDie.*return.*$",
+                4));
+        methodReqs.add(checkMethodBodyContains(yClass, "main",
+                new String[] {"String[]"},
+                "Ex.17: set hand variable to rollFiveDice",
+                "^.*String( )+hand( )*=( )*Dice\\.rollFiveDice( )*\\(( )*\\).*while.*$",
+                3));
+        String makeplayString = "^.*if.*equals.*\"A\".*return( )+1.*"
+                + "else( )+if.*equals.*\"(B|b)\".*return( )+2.*"
+                + "else( )+if.*equals.*\"(C|c)\".*return( )+3.*"
+                + "else( )+if.*equals.*\"(D|d)\".*return( )+4.*"
+                + "else( )+if.*equals.*\"(E|e)\".*return( )+5.*"
+                + "else( )+if.*equals.*\"(F|f)\".*return( )+6.*"
+                + "else( )+if.*equals.*\"(G|g)\".*return( )+7.*"
+                + "else( )+if.*equals.*\"(H|h)\".*return( )+8.*"
+                + "else( )+if.*equals.*\"(I|i)\".*return( )+9.*"
+                + "else( )+if.*equals.*\"(J|j)\".*return( )+10.*"
+                + "else( )+if.*equals.*\"(K|k)\".*return( )+11.*"
+                + "else( )+if.*equals.*\"(L|l)\".*return( )+12.*"
+                + "else( )+if.*equals.*\"(M|m)\".*return( )+13.*";
+        methodReqs.addAll(checkMethodCorrectness(yClass, "makePlay",
+                new String[]{"String","String"},
+                "^/\\*\\*.*@param( )+choice.*@param( )+hand.*@return.*\\*/$",
+                "^public( )+static( )+int( )+makePlay( )*\\(( )*String( )+choice( )*,( )*String( )+hand( )*\\)",
+                makeplayString,
                 5));
         return methodReqs;
     }
@@ -90,10 +131,48 @@ public class Lab5 extends Assignment{
     public ArrayList<Requirement> checkMethodOutput(){
         ArrayList<Requirement> methodReqs = new ArrayList();
         String welcomeOutput = "Hello, welcome to "+getUsername()+"'s Yahtzee game!\\R"+
-                "Press Enter to roll 5 dice.";
+                "Press Enter to roll 5 dice";
         methodReqs.add(assertSystemOutputRegex(yObject, 
                 "welcome", null,null,
-                welcomeOutput,5));
+                welcomeOutput,3));
+        String promptOutput = "Choose one of the following options:\\R"+
+                "A:( )*Count 1s(\\t)+G:( )*Three of a kind\\R"+
+                "B:( )*Count 2s(\\t)+H:( )*Four of a kind\\R"+
+                "C:( )*Count 3s(\\t)+I:( )*Full house\\R"+
+                "D:( )*Count 4s(\\t)+J:( )*Small straight\\R"+
+                "E:( )*Count 5s(\\t)+K:( )*Large straight\\R"+
+                "F:( )*Count 6s(\\t)+L:( )*Yahtzee\\R"+
+                "(\\t)+M:( )*Chance";
+        methodReqs.add(assertSystemOutputRegex(yObject, 
+                "prompt", new Class[] {boolean.class},new Object[]{true},
+                "^"+promptOutput,5));
+        methodReqs.add(assertSystemOutputRegex(yObject, 
+                "prompt", new Class[] {boolean.class},new Object[]{false},
+                "^Enter the numbers you wish to reroll, or\\R"+promptOutput,5));
+        String mainOutput = "^"+welcomeOutput+".*"
+                +promptOutput+".*IllegalArgumentException.*"
+                +promptOutput+".*Please try again.*"
+                +promptOutput+".*Turn #1( )*=( )*13.*Total Score( )*=( )*13.*"
+                +promptOutput+".*Turn #2( )*=( )*12.*Total Score( )*=( )*25.*"
+                +promptOutput+".*Turn #3( )*=( )*11.*Total Score( )*=( )*36.*"
+                +promptOutput+".*Turn #4( )*=( )*10.*Total Score( )*=( )*46.*"
+                +promptOutput+".*Turn #5( )*=( )*9.*Total Score( )*=( )*55.*"
+                +promptOutput+".*Turn #6( )*=( )*8.*Total Score( )*=( )*63.*"
+                +promptOutput+".*Turn #7( )*=( )*7.*Total Score( )*=( )*70.*"
+                +promptOutput+".*Turn #8( )*=( )*6.*Total Score( )*=( )*76.*"
+                +promptOutput+".*Turn #9( )*=( )*5.*Total Score( )*=( )*81.*"
+                +promptOutput+".*Turn #10( )*=( )*4.*Total Score( )*=( )*85.*"
+                +promptOutput+".*Turn #11( )*=( )*3.*Total Score( )*=( )*88.*"
+                +promptOutput+".*Turn #12( )*=( )*2.*Total Score( )*=( )*90.*"
+                +"Roll.*results( )*:( )*1 2 3 4 5.*"+promptOutput+".*Turn #13( )*=( )*1.*Total Score( )*=( )*91.*";
+        methodReqs.add(assertSystemOutputRegex(yObject,
+                "main", new Class[]{String[].class}, new Object[]{new String[]{}},
+                mainOutput, 25));
+        return methodReqs;
+    }
+    
+    public ArrayList<Requirement> checkMethodReturns(){
+        ArrayList<Requirement> methodReqs = new ArrayList();
         return methodReqs;
     }
 }

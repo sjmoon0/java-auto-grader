@@ -291,7 +291,7 @@ public class Assignment
                             System.setIn(getClass().getResourceAsStream("/input/"+type+num+"input.txt"));
                             check.invoke(testObj,(Object[])paramValues);
                             if(baos.toString().length()>0 ){
-                                    Pattern p = Pattern.compile(targetRegex);
+                                    Pattern p = Pattern.compile(targetRegex,Pattern.DOTALL);
                                     Matcher m = p.matcher(baos.toString());
                                     //System.out.println(baos.toString());
                                     if(m.find()){
