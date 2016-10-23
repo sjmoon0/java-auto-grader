@@ -479,16 +479,16 @@ public class Assignment
                 if(check!=null){
                     Object actualReturnValue = check.invoke(testObj,(Object[])paramValues);
                     if(actualReturnValue.getClass().toString().equals(targetReturnValue.getClass().toString())){
-                        return new Requirement("Return Type?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                        return new Requirement("Correct Return?:"+methodName,pointsPossible,pointsPossible,"Correct!");
                     }
-                    return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Incorrect return data type");
+                    return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Incorrect return data type");
                 }
                 else{
-                    return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
+                    return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                return new Requirement("Return Type?:"+methodName,pointsPossible,0,"Could not find method: "+
+                return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Could not find method: "+
                             methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
             }
         }
