@@ -447,7 +447,6 @@ public class Assignment
          */
         public Requirement checkMethodBodyContains(ParsedClass parsedClass, String methodName, String[] params, String reqDesc, String targetRegex, int points){
             ArrayList<ParsedMethod> methods = parsedClass.getMethods();
-            ArrayList<Requirement> reqs = new ArrayList();
             for(int i=0;i<methods.size();++i){
                 if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
                     if(assertCodeExistsRegex(methods.get(i).getBody(),targetRegex)){
@@ -458,6 +457,29 @@ public class Assignment
                 }
             }
             return new Requirement(methodName+" contains "+reqDesc+"?",points,0,"Not found");
+        }
+        /**
+         * Checks to see if supplied regular expression can be found within a method's comments
+         * and returns a Requirement object with a provided description.
+         * @param parsedClass The static text of the class
+         * @param methodName The method to be checked
+         * @param params The parameters of the method being checked
+         * @param targetRegex The regular expression to be found
+         * @param points The number of points that this requirement is worth
+         * @return Gradable Requirement object
+         */
+        public Requirement checkMethodComments(ParsedClass parsedClass, String methodName, String[] params, String targetRegex, int points){
+            ArrayList<ParsedMethod> methods = parsedClass.getMethods();
+            for(int i=0;i<methods.size();++i){
+                if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
+                    if(assertCodeExistsRegex(methods.get(i).getComments(),targetRegex)){
+                        return new Requirement(methodName+" comments?",points,points,"Correct!");
+                    }else{
+                        return new Requirement(methodName+" comments?",points,0,"Incorrect");
+                    }
+                }
+            }
+            return new Requirement(methodName+" comments?",points,0,"Not found");
         }
         
         /**
