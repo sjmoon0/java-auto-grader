@@ -501,16 +501,50 @@ public class Assignment
                 if(check!=null){
                     Object actualReturnValue = check.invoke(testObj,(Object[])paramValues);
                     if(actualReturnValue.getClass().toString().equals(targetReturnValue.getClass().toString())){
-                        return new Requirement("Correct Return?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                        return new Requirement("Return type?:"+methodName,pointsPossible,pointsPossible,"Correct!");
                     }
-                    return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Incorrect return data type");
+                    return new Requirement("Return type?:"+methodName,pointsPossible,0,"Incorrect return data type");
                 }
                 else{
-                    return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
+                    return new Requirement("Return type?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                return new Requirement("Correct Return?:"+methodName,pointsPossible,0,"Could not find method: "+
+                return new Requirement("Return type?:"+methodName,pointsPossible,0,"Could not find method: "+
+                            methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
+            }
+        }
+        
+        /**
+         * Checks to make sure the value returned matches the expected return value.
+         * Doesn't yet compare return values.
+         * @param testObj The instance of the student implemented class.
+         * @param methodName The name of the method being returned
+         * @param paramTypes Array of class types for the method parameters
+         * @param paramValues Array of object types for the method parameters
+         * @param targetReturnType Class data type expected to be returned
+         * @param targetReturnValue Object data value expected to be returned
+         * @param pointsPossible points for the requirement that tests proper return type
+         * @return Whether or not the return type matches what's expected
+         */
+        public Requirement checkMethodReturnValue(Object testObj, String methodName,Class[] paramTypes,Object[] paramValues, Class targetReturnType, Object targetReturnValue, int pointsPossible){
+            try{
+                Class<?> getclass = testObj.getClass();
+                Method check = getclass.getMethod(methodName,paramTypes);
+                if(check!=null){
+                    Object actualReturnValue = check.invoke(testObj,(Object[])paramValues);
+                    System.out.println(actualReturnValue.toString() +" : "+targetReturnValue.toString());
+                    if(actualReturnValue.toString().equals(targetReturnValue.toString())){
+                        return new Requirement("Return value?:"+methodName,pointsPossible,pointsPossible,"Correct!");
+                    }
+                    return new Requirement("Return value?:"+methodName,pointsPossible,0,"Incorrect return data type");
+                }
+                else{
+                    return new Requirement("Return value?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                return new Requirement("Return value?:"+methodName,pointsPossible,0,"Could not find method: "+
                             methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
             }
         }
