@@ -146,67 +146,67 @@ public class Lab6 extends Assignment{
     
     public ArrayList<Requirement> checkMethodReturns(){
         ArrayList<Requirement> methodReqs = new ArrayList();
-        methodReqs.add(checkMethodReturnType(yObject2,"reroll",
+        methodReqs.add(checkMethodReturnValue(yObject2,"reroll",
                 new Class[]{String.class,String.class},
                 new Object[]{"123","1 2 3 4 5"},
                 String.class,
                 "4 5 4 3 6",5));
-        methodReqs.add(checkMethodReturnType(yObject2,"reroll",
+        methodReqs.add(checkMethodReturnValue(yObject2,"reroll",
                 new Class[]{String.class,String.class},
                 new Object[]{"1  2  3","1 2 3 4 5"},
                 String.class,
                 "4 5 1 6 3",5));
-        methodReqs.add(checkMethodReturnType(yObject2,"reroll",
+        methodReqs.add(checkMethodReturnValue(yObject2,"reroll",
                 new Class[]{String.class,String.class},
                 new Object[]{"2 3 4","5 4 3 2 1"},
                 String.class,
                 "5 1 6 3 2",5));
-        methodReqs.add(checkMethodReturnType(yObject2,"reroll",
+        methodReqs.add(checkMethodReturnValue(yObject2,"reroll",
                 new Class[]{String.class,String.class},
                 new Object[]{"2 3 4 15","5 4 3 2 1"},
                 String.class,
                 "4 6 6 6 6",5));
-        methodReqs.add(checkMethodReturnType(yObject2,"reroll",
+        methodReqs.add(checkMethodReturnValue(yObject2,"reroll",
                 new Class[]{String.class,String.class},
                 new Object[]{"3","3 4 3 2 1"},
                 String.class,
                 "4 3 2 1 4",5));
-        methodReqs.add(checkMethodReturnType(eObject,"checkCount",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkCount",
                 new Class[]{String.class,int.class},
                 new Object[]{"1 2 3 4 5",5},
                 int.class,
                 0,5));
-        methodReqs.add(checkMethodReturnType(eObject,"checkThreeOfAKind",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkThreeOfAKind",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 1,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkFourOfAKind",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkFourOfAKind",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 2,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkFullHouse",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkFullHouse",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 3,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkSmallStraight",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkSmallStraight",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 4,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkLargeStraight",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkLargeStraight",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 5,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkYahtzee",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkYahtzee",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,
                 6,4));
-        methodReqs.add(checkMethodReturnType(eObject,"checkChance",
+        methodReqs.add(checkMethodReturnValue(eObject,"checkChance",
                 new Class[]{String.class},
                 new Object[]{"1 2 3 4 5"},
                 int.class,

@@ -533,11 +533,11 @@ public class Assignment
                 Method check = getclass.getMethod(methodName,paramTypes);
                 if(check!=null){
                     Object actualReturnValue = check.invoke(testObj,(Object[])paramValues);
-                    System.out.println(actualReturnValue.toString() +" : "+targetReturnValue.toString());
-                    if(actualReturnValue.toString().equals(targetReturnValue.toString())){
+                    //System.out.println(actualReturnValue.toString() +" : "+targetReturnValue.toString());
+                    if(actualReturnValue.toString().trim().equals(targetReturnValue.toString().trim())){
                         return new Requirement("Return value?:"+methodName,pointsPossible,pointsPossible,"Correct!");
                     }
-                    return new Requirement("Return value?:"+methodName,pointsPossible,0,"Incorrect return data type");
+                    return new Requirement("Return value?:"+methodName,pointsPossible,0,"Incorrect return data value");
                 }
                 else{
                     return new Requirement("Return value?:"+methodName,pointsPossible,0,"Could not find method "+methodName);
