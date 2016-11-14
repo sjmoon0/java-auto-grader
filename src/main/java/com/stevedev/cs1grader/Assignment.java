@@ -56,7 +56,7 @@ public class Assignment
 	private static FileWriter masterGradeFile;
 	private static HashSet<String> STUDENTS;
         private static boolean usingNetbeans;
-	private static final int IC_POINTS=2;//Points for initial conditions. Decrease for subsequent labs
+	private static final int IC_POINTS=1;//Points for initial conditions. Decrease for subsequent labs
 
 	/**
 	* Assignment constructor
@@ -587,8 +587,8 @@ public class Assignment
          */
         private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
             int j=0;
-            for(String paramType:foundParams){
-                if(j>=targetParams.length){
+            for(String paramType:targetParams){
+                if(j>=foundParams.size()){
                     return false;
                 }
                 if(!foundParams.get(j).equals(targetParams[j])){

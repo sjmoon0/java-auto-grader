@@ -30,12 +30,10 @@ public class Lab8 extends Assignment{
     private static final String PACKAGE_NAME = "parkinglot";
     private static final String MAIN_CLASS = "Tester";
     private static ParsedClass cClass;
-    private static ParsedClass cfClass;
     private static ParsedClass plClass;
     private static ParsedClass tClass;
     private static Object cObject;
     private static Object cObjectwParams;
-    private static Object cfObject;
     private static Object plObject;
     private static Object plObjectwParams;
     private static Object tObject;
@@ -46,6 +44,7 @@ public class Lab8 extends Assignment{
         ArrayList<Requirement> requirements = checkInitialConditions(PACKAGE_NAME+"."+MAIN_CLASS);
         if(requirements.get(0).getReceived()>0 && requirements.get(1).getReceived()>0){
             requirements.addAll(lab.checkFields());
+            requirements.addAll(lab.checkConstructorSyntax());
             requirements.addAll(lab.checkMethodSyntax());
             requirements.addAll(lab.checkMethodReturns());
             requirements.addAll(lab.checkMethodOutput());
@@ -61,16 +60,14 @@ public class Lab8 extends Assignment{
         Object[] cObs= {"BROWN","Subaru","Forrester",12345.67,2015};
         cObjectwParams = getInstance(PACKAGE_NAME+".Car",cArgTypes,cObs);
         cObject = getInstance(PACKAGE_NAME+".Car",null,null);
-        cfObject = getInstance(PACKAGE_NAME+".CarFactory",null,null);
         Class<?>[] plArgTypes = {int.class};
-        Object[] plObs= {10};
+        Object[] plObs= {3};
         plObjectwParams = getInstance(PACKAGE_NAME+".ParkingLot",plArgTypes,plObs);
         plObject = getInstance(PACKAGE_NAME+".ParkingLot",null,null);
         tClass = JavaFileParser.parse(PACKAGE_NAME+"/"+MAIN_CLASS);
         cClass = JavaFileParser.parse(PACKAGE_NAME+"/Car");
-        cfClass = JavaFileParser.parse(PACKAGE_NAME+"/CarFactory");
         plClass = JavaFileParser.parse(PACKAGE_NAME+"/ParkingLot");
-        if(tClass==null || cClass==null || cfClass==null || plClass==null){
+        if(tClass==null || cClass==null || plClass==null){
             System.err.println("Classes not parsed correctly");
             System.exit(0);
         }
@@ -87,7 +84,9 @@ public class Lab8 extends Assignment{
         reqs.add(checkFieldExists(cClass, "odometer",
                 "^private( )+double( )+odometer( )*;$",2));
         reqs.add(checkFieldExists(cClass, "year",
-                "^private( )+int( )+year( )*;$",3));
+                "^private( )+int( )+year( )*;$",2));
+        reqs.add(checkFieldExists(plClass, "lot",
+                "^private( )+Car\\[\\]( )+lot( )*;$",2));
         return reqs;
     }
     
@@ -101,6 +100,14 @@ public class Lab8 extends Assignment{
                 new String[]{"String","String","String","double","int"},
                 "^/\\*\\*.*(C|c)onstructor.*@param color.*@param make.*@param model.*@param odometer.*@param year.*\\*/$",
                 1));
+        constructorReqs.add(checkConstructorComments(plClass, "ParkingLot",
+                new String[]{},
+                "^/\\*\\*.*(N|n)o (P|p)arameter (C|c)onstructor.*\\*/$",
+                1));
+        constructorReqs.add(checkConstructorComments(plClass, "ParkingLot",
+                new String[]{"int"},
+                "^/\\*\\*.*(C|c)onstructor.*@param( )+length.*\\*/$",
+                1));
         return constructorReqs;
     }
     
@@ -111,43 +118,73 @@ public class Lab8 extends Assignment{
                 "^/\\*\\*.*@return.*(M|m)ake.*\\*/$",
                 "^public( )+String( )+getMake( )*\\(( )*\\).*$",
                 "^.*return( )+make.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "getModel",
                 new String[]{},
                 "^/\\*\\*.*@return.*(M|m)odel.*\\*/$",
                 "^public( )+String( )+getModel( )*\\(( )*\\).*$",
                 "^.*return( )+model.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "getColor",
                 new String[]{},
                 "^/\\*\\*.*@return.*(C|c)olor.*\\*/$",
                 "^public( )+String( )+getColor( )*\\(( )*\\).*$",
                 "^.*return( )+color.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "getYear",
                 new String[]{},
                 "^/\\*\\*.*@return.*(Y|y)ear.*\\*/$",
-                "^public( )+String( )+getYear( )*\\(( )*\\).*$",
+                "^public( )+int( )+getYear( )*\\(( )*\\).*$",
                 "^.*return( )+year.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "getOdometer",
                 new String[]{},
-                "^/\\*\\*.*@return.*(O|o)dometer.*\\*/$",
-                "^public( )+String( )+getOdometer( )*\\(( )*\\).*$",
+                "^/\\*\\*.*@return.*((O|o)dometer|(M|m)ileage).*\\*/$",
+                "^public( )+double( )+getOdometer( )*\\(( )*\\).*$",
                 "^.*return( )+odometer.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "repaint",
                 new String[]{"String"},
                 "^/\\*\\*.*@param.*(C|c)olor.*\\*/$",
                 "^public( )+void( )+repaint( )*\\(( )*String( )*.*\\).*$",
                 "^.*color( )*\\=.*$",
-                2));
+                1));
         methodReqs.addAll(checkMethodCorrectness(cClass, "resetMileage",
                 new String[]{},
-                "^/\\*\\*.*(S|s)et( )+(O|odometer).*\\*/$",
-                "^public( )+void( )+repaint( )*\\(( )*String( )*.*\\).*$",
-                "^.*color( )*\\=.*$",
-                2));
+                "^/\\*\\*.*(S|s)et.*(O|o)dometer.*\\*/$",
+                "^public( )+void( )+resetMileage( )*\\(( )*\\).*$",
+                "^.*odometer( )*\\=.*$",
+                1));
+        methodReqs.add(checkMethodBodyContains(plClass, "fillLot",
+                new String[]{},
+                "Setting 0th index to first parameter value",
+                "^.*lot\\[( )*0( )*\\]( )*\\=( )*first.*$",
+                1));
+        methodReqs.add(checkMethodBodyContains(plClass, "fillLot",
+                new String[]{},
+                "Setting last index to second parameter value",
+                "^.*lot\\[( )*lot.length( )*\\-( )*1( )*\\]( )*\\=( )*last.*$",
+                1));
+        methodReqs.add(checkMethodBodyContains(plClass, "fillLot",
+                new String[]{},
+                "CarFactory method call inside a for loop",
+                "^.*for( )*\\(int.*;.*;.*\\).*lot\\[.*\\]( )*\\=( )*CarFactory.generateCar\\(( )*\\).*$",
+                3));
+        methodReqs.add(checkMethodBodyContains(plClass, "paintToyotasGreen",
+                new String[]{},
+                "repaint inside a for each loop",
+                "^.*for.*\\(( )*Car.*:.*\\).*\\{.*repaint.*\\}.*$",
+                3));
+        methodReqs.add(checkMethodBodyContains(plClass, "resetAllOdometers",
+                new String[]{},
+                "resetMileage inside a for each loop",
+                "^.*for.*\\(( )*Car.*:.*\\).*\\{.*resetMileage.*\\}.*$",
+                3));
+        methodReqs.add(checkMethodBodyContains(plClass, "removeRedCars",
+                new String[]{},
+                "for loop that sets certain indices to null",
+                "^.*for( )*\\(int.*;.*;.*\\).*lot\\[.*\\]( )*\\=( )*null.*$",
+                3));
         return methodReqs;
     }
     
@@ -158,6 +195,68 @@ public class Lab8 extends Assignment{
                 null,
                 String.class,
                 "Toyota",2));
+        methodReqs.add(checkMethodReturnValue(cObjectwParams,"getMake",
+                null,
+                null,
+                String.class,
+                "Subaru",2));
+        methodReqs.add(checkMethodReturnValue(cObject,"getModel",
+                null,
+                null,
+                String.class,
+                "Camry",2));
+        methodReqs.add(checkMethodReturnValue(cObjectwParams,"getModel",
+                null,
+                null,
+                String.class,
+                "Forrester",2));
+        methodReqs.add(checkMethodReturnValue(cObject,"getColor",
+                null,
+                null,
+                String.class,
+                "BLACK",2));
+        methodReqs.add(checkMethodReturnValue(cObjectwParams,"getColor",
+                null,
+                null,
+                String.class,
+                "BROWN",2));
+        methodReqs.add(checkMethodReturnValue(cObject,"getOdometer",
+                null,
+                null,
+                double.class,
+                0.0,2));
+        methodReqs.add(checkMethodReturnValue(cObjectwParams,"getOdometer",
+                null,
+                null,
+                double.class,
+                12345.67,2));
+        methodReqs.add(checkMethodReturnValue(cObject,"getYear",
+                null,
+                null,
+                int.class,
+                2000,2));
+        methodReqs.add(checkMethodReturnValue(cObjectwParams,"getYear",
+                null,
+                null,
+                int.class,
+                2015,2));
+        methodReqs.add(checkMethodReturnValue(cObject,"toString",
+                null,
+                null,
+                String.class,
+                "2000 BLACK Toyota Camry with 0.0 miles",2));
+        String plOutput = "|-\n"
+                        + "| null\n"
+                        + "|-\n"
+                        + "| null\n"
+                        + "|-\n"
+                        + "| null\n"
+                        + "|-\n";
+        methodReqs.add(checkMethodReturnValue(plObjectwParams,"toString",
+                null,
+                null,
+                String.class,
+                plOutput,2));
         return methodReqs;
     }
     
@@ -256,7 +355,7 @@ public class Lab8 extends Assignment{
                             + "\\|\\-.*$";
         methodReqs.add(assertSystemOutputRegex(tObject,
                 "main", new Class[]{String[].class}, new Object[]{new String[]{}},
-                mainOutput, 10));
+                mainOutput, 16));
         return methodReqs;
     }
 }
