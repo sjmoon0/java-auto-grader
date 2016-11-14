@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 steve
  *
  * This program is free software; you can redistribute it and/or
@@ -20,42 +20,40 @@ package com.stevedev.cs1grader;
 import java.util.ArrayList;
 
 /**
- * Object that contains static text from a single java file for each gradable part of a class.
+ *
  * @author steve
- * @version 2016.09.17
  */
-public class ParsedClass {
+public class ParsedConstructor {
     private String name;
-    private String introComments;
-    private ArrayList<ParsedField> fields;
-    private ArrayList<ParsedConstructor> constructors;
-    private ArrayList<ParsedMethod> methods;
+    private String comments;
+    private String header;
+    private ArrayList<String> params;
+    private String body;
     
-    public ParsedClass(String n, String i, ArrayList<ParsedField> f, ArrayList<ParsedConstructor> c, ArrayList<ParsedMethod> m){
+    public ParsedConstructor(String n,String c, String h, ArrayList<String> p, String b){
         name = n;
-        introComments = i;
-        fields = f;
-        constructors = c;
-        methods = m;
+        comments = c;
+        header = h;
+        params = p;
+        body = b;
     }
-    
     public String getName(){
         return name;
     }
-    
     public String getComments(){
-        return introComments;
+        return comments;
     }
-    
-    public ArrayList<ParsedField> getFields(){
-        return fields;
+    public String getHeader(){
+        return header;
     }
-    
-    public ArrayList<ParsedMethod> getMethods(){
-        return methods;
+    /**
+     * 
+     * @return String versions of Parameter types that the method takes
+     */
+    public ArrayList<String> getParams(){
+        return params;
     }
-    
-    public ArrayList<ParsedConstructor> getConstructors(){
-        return constructors;
+    public String getBody(){
+        return body;
     }
 }

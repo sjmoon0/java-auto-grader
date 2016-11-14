@@ -371,67 +371,52 @@ public class Assignment
         }
         
         /**
-         * Checks the ParsedClass for the existence of a method, returns 
-         * a gradable requirement depending on regex matching
-         * @param parsedClass ParsedClass object being checked
-         * @param methodName Name of the method to be checked
-         * @param commentRegex Comment regex pattern
-         * @param headerRegex Header regex pattern
-         * @param bodyRegex Body regex pattern
-         * @param pointsPerReq Points per requirement. Methods have requirements about method comment,header, and body
-         * @return 
+         * Checks to see if supplied regular expression can be found within a constructor and returns a 
+         * Requirement object with a provided description.
+         * @param parsedClass The static text of the class
+         * @param constructorName The constructor to be checked
+         * @param params The parameters of the constructor being checked
+         * @param reqDesc A text description of the what is expected in the constructor
+         * @param targetRegex The regular expression to be found
+         * @param points The number of points that this requirement is worth
+         * @return Gradable Requirement object
          */
-        public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String[] params, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
-            ArrayList<ParsedMethod> methods = parsedClass.getMethods();
-            ArrayList<Requirement> reqs = new ArrayList();
-            for(int i=0;i<methods.size();++i){
-                if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
-                    if(assertCodeExistsRegex(methods.get(i).getComments(),commentRegex)){
-                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,pointsPerReq,"Correct!"));
+        public Requirement checkConstructorBodyContains(ParsedClass parsedClass, String constructorName, String[] params, String reqDesc, String targetRegex, int points){
+            ArrayList<ParsedConstructor> constructors = parsedClass.getConstructors();
+            for(int i=0;i<constructors.size();++i){
+                if(constructorName.equals(constructors.get(i).getName())&&hasCorrectParamTypes(constructors.get(i).getParams(),params)){
+                    if(assertCodeExistsRegex(constructors.get(i).getBody(),targetRegex)){
+                        return new Requirement(constructorName+" constructor contains "+reqDesc+"?",points,points,"Correct!");
                     }else{
-                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,0,"Incorrect"));
+                        return new Requirement(constructorName+" constructor contains "+reqDesc+"?",points,0,"Incorrect");
                     }
-                    if(assertCodeExistsRegex(methods.get(i).getHeader(),headerRegex)){
-                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,pointsPerReq,"Correct!"));
-                    }else{
-                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,0,"Incorrect"));
-                    }
-                    if(assertCodeExistsRegex(methods.get(i).getBody(),bodyRegex)){
-                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,pointsPerReq*2,"Correct!"));
-                    }else{
-                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,0,"Incorrect"));
-                    }
-                    break;
-                }
-                else{
-                    if(i==methods.size()-1){
-                        reqs.add(new Requirement("Method "+methodName+"?",pointsPerReq*4,0,"Not found"));
-                        break;
-                    }
-                    continue;
                 }
             }
-            return reqs;
+            return new Requirement(constructorName+" constructor contains "+reqDesc+"?",points,0,"Not found");
         }
         
         /**
-         * checkMethodCorrectness helper method
-         * @param foundParams Parameters found during the checkMethodCorrectness method search
-         * @param targetParams Expected param types for the method
-         * @return True if the found params all equal the target params in the correct order
+         * Checks to see if supplied regular expression can be found within a constructor's comments
+         * and returns a Requirement object with a provided description.
+         * @param parsedClass The static text of the class
+         * @param constructorName The constructor to be checked
+         * @param params The parameters of the constructor being checked
+         * @param targetRegex The regular expression to be found
+         * @param points The number of points that this requirement is worth
+         * @return Gradable Requirement object
          */
-        private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
-            int j=0;
-            for(String paramType:foundParams){
-                if(j>=targetParams.length){
-                    return false;
+        public Requirement checkConstructorComments(ParsedClass parsedClass, String constructorName, String[] params, String targetRegex, int points){
+            ArrayList<ParsedConstructor> constructors = parsedClass.getConstructors();
+            for(int i=0;i<constructors.size();++i){
+                if(constructorName.equals(constructors.get(i).getName())&&hasCorrectParamTypes(constructors.get(i).getParams(),params)){
+                    if(assertCodeExistsRegex(constructors.get(i).getComments(),targetRegex)){
+                        return new Requirement(constructorName+" constructor comments?",points,points,"Correct!");
+                    }else{
+                        return new Requirement(constructorName+" constructor comments?",points,0,"Incorrect");
+                    }
                 }
-                if(!foundParams.get(j).equals(targetParams[j])){
-                    return false;
-                }
-                j++;
             }
-            return true;
+            return new Requirement(constructorName+" constructor comments?",points,0,"Not found");
         }
         
         /**
@@ -481,6 +466,8 @@ public class Assignment
             }
             return new Requirement(methodName+" comments?",points,0,"Not found");
         }
+        
+        
         
         /**
          * Checks to make sure the actual type returned matches the expected return type.
@@ -548,7 +535,69 @@ public class Assignment
                             methodName+". Check requirement document for method spelling, case, and parameter datatypes.");
             }
         }
-
+        /**
+         * Checks the ParsedClass for the existence of a method, returns 
+         * a gradable requirement depending on regex matching
+         * @param parsedClass ParsedClass object being checked
+         * @param methodName Name of the method to be checked
+         * @param commentRegex Comment regex pattern
+         * @param headerRegex Header regex pattern
+         * @param bodyRegex Body regex pattern
+         * @param pointsPerReq Points per requirement. Methods have requirements about method comment,header, and body
+         * @return 
+         */
+        public ArrayList<Requirement> checkMethodCorrectness(ParsedClass parsedClass, String methodName, String[] params, String commentRegex, String headerRegex, String bodyRegex, int pointsPerReq){
+            ArrayList<ParsedMethod> methods = parsedClass.getMethods();
+            ArrayList<Requirement> reqs = new ArrayList();
+            for(int i=0;i<methods.size();++i){
+                if(methodName.equals(methods.get(i).getName())&&hasCorrectParamTypes(methods.get(i).getParams(),params)){
+                    if(assertCodeExistsRegex(methods.get(i).getComments(),commentRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,pointsPerReq,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" comments?",pointsPerReq,0,"Incorrect"));
+                    }
+                    if(assertCodeExistsRegex(methods.get(i).getHeader(),headerRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,pointsPerReq,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" header?",pointsPerReq,0,"Incorrect"));
+                    }
+                    if(assertCodeExistsRegex(methods.get(i).getBody(),bodyRegex)){
+                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,pointsPerReq*2,"Correct!"));
+                    }else{
+                        reqs.add(new Requirement("Method "+methodName+" body?",pointsPerReq*2,0,"Incorrect"));
+                    }
+                    break;
+                }
+                else{
+                    if(i==methods.size()-1){
+                        reqs.add(new Requirement("Method "+methodName+"?",pointsPerReq*4,0,"Not found"));
+                        break;
+                    }
+                    continue;
+                }
+            }
+            return reqs;
+        }
+        
+        /**
+         * checkMethodCorrectness helper method
+         * @param foundParams Parameters found during the checkMethodCorrectness method search
+         * @param targetParams Expected param types for the method
+         * @return True if the found params all equal the target params in the correct order
+         */
+        private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
+            int j=0;
+            for(String paramType:foundParams){
+                if(j>=targetParams.length){
+                    return false;
+                }
+                if(!foundParams.get(j).equals(targetParams[j])){
+                    return false;
+                }
+                j++;
+            }
+            return true;
+        }
 	/**
 	* "Grades" a list of requirements by writing them to the student grade text file.
 	* Writes to master grade csv depending on isMaster parameter

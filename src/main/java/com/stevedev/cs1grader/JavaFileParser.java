@@ -24,6 +24,7 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class JavaFileParser {
             FileInputStream in = new FileInputStream(fileName+".java");
             CompilationUnit cu;
             cu = JavaParser.parse(in);
-            ParsedClass pc = buildClass(cu,buildFields(cu),buildMethods(cu));
+            ParsedClass pc = buildClass(cu,buildFields(cu),buildConstructors(cu),buildMethods(cu));
             in.close();
             return pc;
         }catch(Exception e){
@@ -80,6 +81,31 @@ public class JavaFileParser {
         }
         return pm;
     }
+    /**
+     * Separates the compilation unit into a list of methods
+     * @param cu CompilationUnit from JavaParser
+     * @return ArrayList of ParsedMethods to be used for the ParsedClass
+     */
+    private static ArrayList<ParsedConstructor> buildConstructors(CompilationUnit cu){
+        ArrayList<ParsedConstructor> pm = new ArrayList();
+        List<TypeDeclaration> types = cu.getTypes();
+        for(TypeDeclaration type:types){
+            List<BodyDeclaration> members = type.getMembers();
+            for(BodyDeclaration member:members){
+                if(member instanceof ConstructorDeclaration){
+                    ConstructorDeclaration m = (ConstructorDeclaration)member;
+                    String comments = (m.getJavaDoc()==null ? "":m.getJavaDoc().toString());
+                    ArrayList<String> params = new ArrayList();
+                    for(int i=0;i<m.getParameters().size();++i){
+                        params.add(m.getParameters().get(i).getType().toString());
+                    }
+                    pm.add(new ParsedConstructor(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),params,m.getBlock().toStringWithoutComments().trim()));
+                }
+            }
+        }
+        return pm;
+    }
+    
     
     /**
      * Separates the compilation unit into a list of fields
@@ -94,7 +120,14 @@ public class JavaFileParser {
             for(BodyDeclaration member:members){
                 if(member instanceof FieldDeclaration){
                     FieldDeclaration f = (FieldDeclaration)member;
-                    fields.add(new ParsedField(f.getVariables().get(0).getId().getName().trim(),f.getType().toStringWithoutComments(),f.getVariables().get(0).getInit().toStringWithoutComments().trim() ,f.toStringWithoutComments().trim()));
+                    String value ="";
+                    if(f.getVariables().get(0).getInit()!=null){
+                        value = f.getVariables().get(0).getInit().toStringWithoutComments().trim();
+                    }
+                    else{
+                        value = null;
+                    }
+                    fields.add(new ParsedField(f.getVariables().get(0).getId().getName().trim(),f.getType().toStringWithoutComments(),value ,f.toStringWithoutComments().trim()));
                 }
             }
         }
@@ -108,13 +141,13 @@ public class JavaFileParser {
      * @param methods ArrayList of ParsedMethod objects that represent methods
      * @return The final ParsedClass object
      */
-    private static ParsedClass buildClass(CompilationUnit cu, ArrayList<ParsedField> fields,ArrayList<ParsedMethod> methods){
+    private static ParsedClass buildClass(CompilationUnit cu, ArrayList<ParsedField> fields, ArrayList<ParsedConstructor> constructors,ArrayList<ParsedMethod> methods){
         List<TypeDeclaration> types = cu.getTypes();
         for(TypeDeclaration type:types){
             if(type instanceof ClassOrInterfaceDeclaration){
                 ClassOrInterfaceDeclaration c = (ClassOrInterfaceDeclaration)type;
                 String comments = (c.getJavaDoc()==null ? "":c.getJavaDoc().toString());
-                return new ParsedClass(c.getName().trim(),comments.trim(),fields,methods);
+                return new ParsedClass(c.getName().trim(),comments.trim(),fields,constructors,methods);
             }
         }
         return null;

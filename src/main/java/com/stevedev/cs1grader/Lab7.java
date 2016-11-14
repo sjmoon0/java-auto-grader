@@ -34,7 +34,6 @@ public class Lab7 extends Assignment{
     private static Object yObject;
     private static Object dObject;
     private static Object eObject;
-    private static boolean usingNetbeans = true;
     
     public static void main(String[] args){
         Lab7 lab = new Lab7();
