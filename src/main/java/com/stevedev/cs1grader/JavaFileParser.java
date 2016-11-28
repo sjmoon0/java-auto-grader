@@ -71,11 +71,13 @@ public class JavaFileParser {
                 if(member instanceof MethodDeclaration){
                     MethodDeclaration m = (MethodDeclaration)member;
                     String comments = (m.getJavaDoc()==null ? "":m.getJavaDoc().toString());
+                    String body = (m.getBody()==null ? "":m.getBody().toStringWithoutComments().trim());
+                    
                     ArrayList<String> params = new ArrayList();
                     for(int i=0;i<m.getParameters().size();++i){
                         params.add(m.getParameters().get(i).getType().toString());
                     }
-                    pm.add(new ParsedMethod(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),params,m.getBody().toStringWithoutComments().trim()));
+                    pm.add(new ParsedMethod(m.getName().trim(),comments.trim(),m.getDeclarationAsString().trim(),params,body));
                 }
             }
         }
