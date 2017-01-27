@@ -675,26 +675,31 @@ public class Assignment
 	*/
 	private static void initializeStudents(){
 		STUDENTS = new HashSet<String>();
-		STUDENTS.add("ralem0");
-		STUDENTS.add("jrbuntine0");
-		STUDENTS.add("dachinnery0");
-		STUDENTS.add("qmconroy0");
-		STUDENTS.add("kvedwards0");
-		STUDENTS.add("dahungerford0");
-		STUDENTS.add("chymiller0");
-		STUDENTS.add("aplehman0");
-		STUDENTS.add("aellinas0");
-		STUDENTS.add("jtmason0");
-		STUDENTS.add("cdparker01");
-		STUDENTS.add("jcpiper0");
-		STUDENTS.add("mqian0");
-		STUDENTS.add("nmrevell0");
-		STUDENTS.add("jrrost0");
-		STUDENTS.add("amshelton0");
-		STUDENTS.add("cbshore0");
+		STUDENTS.add("gkbarnett0");
+		STUDENTS.add("jbhylet0");
+		STUDENTS.add("bmbinkley0");
+		STUDENTS.add("mabiddonnette0");
+		STUDENTS.add("rmbrosh0");
+		STUDENTS.add("jdbrummell0");
+		STUDENTS.add("jdavis0");
+		STUDENTS.add("tgapieieva0");
+		STUDENTS.add("jegiordano0");
+		STUDENTS.add("dkglover0");
+		STUDENTS.add("aggooding0");
+		STUDENTS.add("shegde02");
+		STUDENTS.add("hahensel0");
+		STUDENTS.add("twjones01");
+		STUDENTS.add("lsmaclean0");
+		STUDENTS.add("hrmcfalls0");
+		STUDENTS.add("bamiller0");
+		STUDENTS.add("djpabst0");
+		STUDENTS.add("jaritchie0");
+		STUDENTS.add("tprock0");
+		STUDENTS.add("erseibert0");
 		STUDENTS.add("wasilva0");
-		STUDENTS.add("btichnell0");
-		STUDENTS.add("nrwade0");
+		STUDENTS.add("jhsutherland0");
+		STUDENTS.add("favandivier0");
+		STUDENTS.add("dwilliams05");
 		STUDENTS.add("sjmoon");
 	}
 }
