@@ -90,7 +90,7 @@ public class Lab5 extends Assignment{
                 "^.*while.*prompt( )*\\(( )*currentRoll( )*==( )*3( )*\\).*$",
                 3));
         methodReqs.addAll(checkMethodCorrectness(dClass, "rollDie",
-                null,
+                new String[] {},
                 "^/\\*\\*.*@return.*\\*/$",
                 "^public( )+static( )+int( )+rollDie( )*\\(( )*\\).*$",
                 "^.*DIE\\.nextInt( )*\\(( )*6( )*\\)( )*\\+( )*1.*;.*$",

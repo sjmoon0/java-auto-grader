@@ -588,7 +588,7 @@ public class Assignment
         private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
             int j=0;
             for(String paramType:targetParams){
-                if(j>=foundParams.size()){
+                if(j>foundParams.size()){
                     return false;
                 }
                 if(!foundParams.get(j).equals(targetParams[j])){
@@ -678,7 +678,7 @@ public class Assignment
 		STUDENTS.add("gkbarnett0");
 		STUDENTS.add("jbhylet0");
 		STUDENTS.add("bmbinkley0");
-		STUDENTS.add("mabiddonnette0");
+		STUDENTS.add("mabissonnette0");
 		STUDENTS.add("rmbrosh0");
 		STUDENTS.add("jdbrummell0");
 		STUDENTS.add("jdavis0");
@@ -697,6 +697,7 @@ public class Assignment
 		STUDENTS.add("tprock0");
 		STUDENTS.add("erseibert0");
 		STUDENTS.add("wasilva0");
+		STUDENTS.add("drsmith02");
 		STUDENTS.add("jhsutherland0");
 		STUDENTS.add("favandivier0");
 		STUDENTS.add("dwilliams05");

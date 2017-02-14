@@ -67,27 +67,27 @@ public class Lab2 extends Assignment
     public ArrayList<Requirement> checkMethodSyntax(){
         ArrayList<Requirement> methodReqs=new ArrayList();
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"main",
-                new String[] {""},
+                new String[] {"String[]"},
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
                 "^public( )+static( )+void( )+main( )*\\(( )*String( )*\\[( )*\\]( )+args( )*\\)$",
                 "^\\{.*greetCustomer( )*\\(( )*\\)( )*;.*checkoutCustomer( )*\\(( )*\\)( )*;.*\\}$",3));
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"greetCustomer",
-                new String[] {""},
+                new String[] {},
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
                 "^public( )+static( )+void( )+greetCustomer( )*\\(( )*\\)$",
                 "^\\{.*String( )+customerName.*println.*EMPLOYEE_UN.*System\\.out\\.println.*BANANA_COST.*\\}$",3));
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"checkoutCustomer",
-                new String[] {""},
+                new String[] {},
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
                 "^public( )+static( )+void( )+checkoutCustomer( )*\\(( )*\\)$",
                 "^\\{.*System\\.out\\.print.*calculateBananaCostLoop.*\\}$",3));
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"calculateBananaCost",
-                new String[] {""},
+                new String[] {},
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
                 "^public( )+static( )+void( )+calculateBananaCost( )*\\(( )*\\)$",
                 "^\\{.*int( )+numBananas( )*\\=( )*10( )*;.*System\\.out\\.println( )*\\(( )*(numBananas( )*\\*( )*BANANA_COST|BANANA_COST( )*\\*( )*numBananas)( )*\\).*\\}$",3));
         methodReqs.addAll(checkMethodCorrectness(parsedClass,"calculateBananaCostLoop",
-                new String[] {""},
+                new String[] {},
                 "^/\\*\\*([^\\*]|\\*(?!/))*?.*?\\*/$",
                 "^public( )+static( )+void( )+calculateBananaCostLoop( )*\\(( )*\\)$",
                 "^\\{.*int( )+numBananas( )*\\=( )*10( )*;.*double( )+sum.*for.*\\{.*sum.*\\+.*BANANA_COST.*\\}.*System\\.out\\.println( )*\\(( )*sum( )*\\).*\\}$",3));
