@@ -588,7 +588,7 @@ public class Assignment
         private boolean hasCorrectParamTypes(ArrayList<String> foundParams, String[] targetParams){
             int j=0;
             for(String paramType:targetParams){
-                if(j>foundParams.size()){
+                if(j>foundParams.size() || foundParams.size() != targetParams.length){
                     return false;
                 }
                 if(!foundParams.get(j).equals(targetParams[j])){
